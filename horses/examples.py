@@ -52,6 +52,11 @@ for i, row in result.iterrows():
     else:
         break
 
+result['f'] = 0.0
+for i, row in result.iterrows():
+    if (row['bet']):
+        result.set_value(i, 'f', row['p']-R/(D/row['b']))
+
 print(result)
 
 # Second example
@@ -88,5 +93,10 @@ for i, row in result.iterrows():
         R = (1-pt)/(1-bt)
     else:
         break
+
+result['f'] = 0.0
+for i, row in result.iterrows():
+    if (row['bet']):
+        result.set_value(i, 'f', row['p']-R/(D/row['b']))
 
 print(result)
