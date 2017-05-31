@@ -5,7 +5,7 @@ import pandas as pd
 
 # First example
 
-# Divident rate, 1-(track take)%
+# Dividend rate, 1-(track take)%
 
 D = 0.80
 
