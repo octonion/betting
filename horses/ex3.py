@@ -43,7 +43,7 @@ while True:
 # Equivalent
 #        if (row['r']>(1-pt-row['p'])/(1-it-row['i'])) and not(row['bet']):
         if (row['r']>R) and not(row['bet']):
-            result.set_value(j, 'bet', True)
+            result.at[j,'bet'] = True
             pt = pt+row['p']
             it = it+row['i']
             R = (1-pt)/(1-it)
@@ -57,6 +57,6 @@ while True:
 result['f'] = 0.0
 for j, row in result.iterrows():
     if (row['bet']):
-        result.set_value(j, 'f', row['p']-R*row['i'])
+        result.at[j,'f'] = row['p']-R*row['i']
 
 print(result)

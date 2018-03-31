@@ -47,7 +47,7 @@ while True:
     found = False
     for i, row in result.iterrows():
         if (row['r']>R) and not(row['bet']):
-            result.set_value(i, 'bet', True)
+            result.at[i,'bet'] = True
             pt = pt+row['p']
             bt = bt+row['b']/D
             R = (1-pt)/(1-bt)
@@ -59,7 +59,7 @@ while True:
 result['f'] = 0.0
 for i, row in result.iterrows():
     if (row['bet']):
-        result.set_value(i, 'f', row['p']-R/(D/row['b']))
+        result.at[i,'f'] = row['p']-R/(D/row['b'])
 
 print(result)
 
@@ -93,7 +93,7 @@ while True:
     found = False
     for i, row in result.iterrows():
         if (row['r']>R) and not(row['bet']):
-            result.set_value(i, 'bet', True)
+            result.at[i,'bet'] = True
             pt = pt+row['p']
             bt = bt+row['b']/D
             R = (1-pt)/(1-bt)
@@ -105,6 +105,6 @@ while True:
 result['f'] = 0.0
 for i, row in result.iterrows():
     if (row['bet']):
-        result.set_value(i, 'f', row['p']-R/(D/row['b']))
+        result.at[i,'f'] = row['p']-R/(D/row['b'])
 
 print(result)
