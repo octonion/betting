@@ -3,6 +3,8 @@ Race: 1
 Optimal Kelly fraction = 0.584441379310345
 Kullback-Leibler growth = 0.2962353855674801
 
+Full Kelly optimal bets:
+
           p        p*         r    bet         f
 6  0.584400  0.234375  2.493440   True  0.487003
 4  0.227300  0.312500  0.727360   True  0.097438
@@ -14,6 +16,11 @@ Kullback-Leibler growth = 0.2962353855674801
 
 Fraction of optimal Kelly = 0.5
 Fraction of bankroll = 0.2922206896551725
+
+Proportional fractional expected log-growth = 0.22755082072818372
+Optimal fractional expected log-growth = 0.24801184002896656
+
+Fractional Kelly optimal bets:
 
           p        p*         r    bet         f
 6  0.584400  0.234375  2.493440   True  0.292221
@@ -29,6 +36,8 @@ Race: 2
 Optimal Kelly fraction = 0.48862952405624804
 Kullback-Leibler growth = 0.08735644455717767
 
+Full Kelly optimal bets:
+
       p        p*         r    bet         f
 2  0.10  0.040000  2.500000   True  0.079545
 1  0.10  0.066671  1.499912   True  0.065907
@@ -38,6 +47,11 @@ Kullback-Leibler growth = 0.08735644455717767
 
 Fraction of optimal Kelly = 0.5
 Fraction of bankroll = 0.24431476202812402
+
+Proportional fractional expected log-growth = 0.06569861077598678
+Optimal fractional expected log-growth = 0.07106893023788606
+
+Fractional Kelly optimal bets:
 
       p        p*         r    bet         f
 2  0.10  0.040000  2.500000   True  0.061341
