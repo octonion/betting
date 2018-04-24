@@ -1,6 +1,7 @@
-Race  1
-Total Kelly fraction = 0.584441379310345
-K-L growth = 0.2962353855674801
+Race 1
+
+Optimal Kelly fraction = 0.584441379310345
+Kullback-Leibler growth = 0.2962353855674801
 
           p        p*         r    bet         f
 6  0.584400  0.234375  2.493440   True  0.487003
@@ -13,9 +14,10 @@ K-L growth = 0.2962353855674801
 
 Horse 4 leaves when f <= 0.36268329120246046
 
-Race  2
-Total Kelly fraction = 0.48862952405624804
-K-L growth = 0.08735644455717767
+Race 2
+
+Optimal Kelly fraction = 0.48862952405624804
+Kullback-Leibler growth = 0.08735644455717767
 
       p        p*         r    bet         f
 2  0.10  0.040000  2.500000   True  0.079545

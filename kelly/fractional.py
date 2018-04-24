@@ -1,198 +1,93 @@
 #!/usr/bin/env python3
 
+import csv
+import sys
+
 import numpy as np
 import pandas as pd
 
-# First example
+csv_name = sys.argv[1]
+fraction = float(sys.argv[2])
 
-# Dividend rate, 1-(track take)%
-# Note D = 1/P*, where P* is the sum of implied probabilities
+with open(sys.argv[1], 'r') as f:
+    csv = csv.reader(f)
+    for p in csv:
+        ip = next(csv)
+        m = int(p[0])
+        
+        # Our probabilities
+        
+        p = np.array([float(i) for i in p[1:]])
+        n = int(ip[0])
 
-D = 0.80
+        # Implied probabilities
+        
+        ip = np.array([float(i) for i in ip[1:]])
+        print("Race:",n)
+        print()
 
-# Win probability vector
+        race = pd.DataFrame()
 
-p = np.array([0.003247,0.003247,0.003247,0.01623,0.2273,0.1623,0.5844])
+        race['p'] = p
+        race['p*'] = ip
+        race['r'] = race['p']/race['p*']
+        race = race.sort_values(by=['r'], ascending=[False])
+        race['bet'] = False
 
-# Belief probability vector
-# (fraction of all track money placed on that horse)
-# Note these are implied probabilities * D
+        p_total = 0.0
+        ip_total = 0.0
+        
+        for i, row in race.iterrows():
+            # Must be a positive hedge
+            if (row['p'] > row['p*']*(1-p_total)/(1-ip_total)):
+                race.at[i,'bet'] = True
+                p_total = p_total + row['p']
+                ip_total = ip_total + row['p*']
+            else:
+                break
 
-b = np.array([0.025,0.0375,0.0625,0.125,0.25,0.3125,0.1875])
+        # Fractions as per binary Kelly
 
-# Implied probabilities are most natural
+        race['f'] = 0.0
+        for i, row in race.iterrows():
+            if (row['bet']):
+                race.at[i,'f'] = row['p']-row['p*']*(1-p_total)/(1-ip_total)
 
-ip = b/D
+        # Optimal bet fraction is as per binary Kelly
 
-race = pd.DataFrame()
+        optimal_f = p_total - (1-p_total)*ip_total/(1-ip_total)
+        print("Optimal Kelly fraction =",optimal_f)
 
-race['p'] = p
-race['p*'] = ip
-race['r'] = race['p']/race['p*']
+        # Optimal expected log growth is Kullback-Leibler divergence
 
-race = race.sort_values(by=['r'], ascending=[False])
+        klg = 0.0
+        for i, row in race.iterrows():
+            if (row['bet']):
+                klg = klg + row['p']*np.log(row['p']/row['p*'])
 
-race['bet'] = False
+        klg = klg + (1-p_total)*np.log((1-p_total)/(1-ip_total))
+        print("Kullback-Leibler growth =",klg)
 
-p_total = 0.0
-ip_total = 0.0
-for i, row in race.iterrows():
-    # Must be a positive hedge
-    if (row['p'] > row['p*']*(1-p_total)/(1-ip_total)):
-        race.at[i,'bet'] = True
-        p_total = p_total + row['p']
-        ip_total = ip_total + row['p*']
-    else:
-        break
+        print()
+        print(race)
+        print()
 
-# Fractions as per binary Kelly
+        # Fractional Kelly
 
-race['f'] = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        race.at[i,'f'] = row['p']-row['p*']*(1-p_total)/(1-ip_total)
+        print("Fraction of optimal Kelly =",fraction)
+        print("Fraction of bankroll =",fraction*optimal_f)
 
-# Total fraction bet is as per binary Kelly
+        for i in reversed(race.index):
+            if (race.at[i,'bet']) and (fraction*optimal_f*(race.at[i,'p']*(1-ip_total)/p_total+race.at[i,'p*'])+(race.at[i,'p']*ip_total/p_total-race.at[i,'p*']) < 0):
+                race.at[i,'bet'] = False
+                p_total = p_total-race.at[i,'p']
+                ip_total = ip_total-race.at[i,'p*']
 
-total_f = p_total - (1-p_total)*ip_total/(1-ip_total)
-print("Total Kelly fraction = ",total_f)
+        race['f'] = 0.0
+        for i, row in race.iterrows():
+            if (row['bet']):
+                race.at[i,'f'] = fraction*optimal_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
 
-# Alternative formulation check
-
-race['a'] = 0.0
-for i, row in race.iterrows():
-    #if (row['bet']):
-        race.at[i,'a'] = total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
-
-# Optimal expected log growth is Kullback-Leibler divergence
-
-klg = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        klg = klg + row['p']*np.log(row['p']/row['p*'])
-
-klg = klg + (1-p_total)*np.log((1-p_total)/(1-ip_total))
-print("K-L growth = ",klg)
-
-print()
-print(race)
-print()
-
-# 1/2-Kelly
-
-kelly_fraction = 0.5
-for i in reversed(race.index):
-    if (race.at[i,'bet']) and (kelly_fraction*total_f*(race.at[i,'p']*(1-ip_total)/p_total+race.at[i,'p*'])+(race.at[i,'p']*ip_total/p_total-race.at[i,'p*']) < 0):
-        race.at[i,'bet'] = False
-        p_total = p_total-race.at[i,'p']
-        ip_total = ip_total-race.at[i,'p*']
-
-race['1/2'] = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        race.at[i,'1/2'] = kelly_fraction*total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
-
-print()
-print(race)
-print()
-
-# Second example
-
-D = 0.85
-
-p = np.array([0.25,0.1,0.1,0.4,0.15])
-b = np.array([0.17,0.05667,0.034,0.34,0.3993])
-
-# Implied probabilities are most natural
-
-ip = b/D
-
-race = pd.DataFrame()
-
-race['p'] = p
-race['p*'] = ip
-race['r'] = race['p']/race['p*']
-
-race = race.sort_values(by=['r'], ascending=[False])
-
-race['bet'] = False
-
-p_total = 0.0
-ip_total = 0.0
-for i, row in race.iterrows():
-    # Must be a positive hedge
-    if (row['p'] > row['p*']*(1-p_total)/(1-ip_total)):
-        race.at[i,'bet'] = True
-        p_total = p_total + row['p']
-        ip_total = ip_total + row['p*']
-    else:
-        break
-
-# Fractions as per binary Kelly
-
-race['f'] = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        race.at[i,'f'] = row['p']-row['p*']*(1-p_total)/(1-ip_total)
-
-# Total fraction bet is as per binary Kelly
-
-total_f = p_total - (1-p_total)*ip_total/(1-ip_total)
-print("Total Kelly fraction = ",total_f)
-
-# Alternative formulation check
-
-race['a'] = 0.0
-for i, row in race.iterrows():
-    #if (row['bet']):
-        race.at[i,'a'] = total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
-
-# Optimal expected log growth is Kullback-Leibler divergence
-
-klg = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        klg = klg + row['p']*np.log(row['p']/row['p*'])
-
-klg = klg + (1-p_total)*np.log((1-p_total)/(1-ip_total))
-print("K-L growth = ",klg)
-
-print()
-print(race)
-print()
-
-# 1/4-Kelly
-
-kelly_fraction = 1.0/4
-for i in reversed(race.index):
-    if (race.at[i,'bet']) and (kelly_fraction*total_f*(race.at[i,'p']*(1-ip_total)/p_total+race.at[i,'p*'])+(race.at[i,'p']*ip_total/p_total-race.at[i,'p*']) < 0):
-        race.at[i,'bet'] = False
-        p_total = p_total-race.at[i,'p']
-        ip_total = ip_total-race.at[i,'p*']
-
-race['1/4'] = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        race.at[i,'1/4'] = kelly_fraction*total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
-
-print()
-print(race)
-print()
-
-# 1/16-Kelly
-
-kelly_fraction = 1.0/16
-for i in reversed(race.index):
-    if (race.at[i,'bet']) and (kelly_fraction*total_f*(race.at[i,'p']*(1-ip_total)/p_total+race.at[i,'p*'])+(race.at[i,'p']*ip_total/p_total-race.at[i,'p*']) < 0):
-        race.at[i,'bet'] = False
-        p_total = p_total-race.at[i,'p']
-        ip_total = ip_total-race.at[i,'p*']
-
-race['1/16'] = 0.0
-for i, row in race.iterrows():
-    if (row['bet']):
-        race.at[i,'1/16'] = kelly_fraction*total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
-
-print()
-print(race)
-print()
+        print()
+        print(race)
+        print()

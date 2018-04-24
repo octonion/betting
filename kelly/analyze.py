@@ -22,7 +22,8 @@ with open(sys.argv[1], 'r') as f:
         # Implied probabilities
         
         ip = np.array([float(i) for i in ip[1:]])
-        print("Race ",n)
+        print("Race",n)
+        print()
 
         race = pd.DataFrame()
 
@@ -53,15 +54,15 @@ with open(sys.argv[1], 'r') as f:
 
         # Total fraction bet is as per binary Kelly
 
-        total_f = p_total - (1-p_total)*ip_total/(1-ip_total)
-        print("Total Kelly fraction =",total_f)
+        optimal_f = p_total - (1-p_total)*ip_total/(1-ip_total)
+        print("Optimal Kelly fraction =",optimal_f)
 
         # Alternative formulation check
 
         #race['a'] = 0.0
         #for i, row in race.iterrows():
         #    #if (row['bet']):
-        #    race.at[i,'a'] = total_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
+        #    race.at[i,'a'] = optimal_f*(row['p']*(1-ip_total)/p_total+row['p*'])+(row['p']*ip_total/p_total-row['p*'])
 
         # Optimal expected log growth is Kullback-Leibler divergence
 
@@ -71,7 +72,7 @@ with open(sys.argv[1], 'r') as f:
                 klg = klg + row['p']*np.log(row['p']/row['p*'])
 
         klg = klg + (1-p_total)*np.log((1-p_total)/(1-ip_total))
-        print("K-L growth =",klg)
+        print("Kullback-Leibler growth =",klg)
 
         print()
         print(race)
