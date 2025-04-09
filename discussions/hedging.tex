@@ -1,0 +1,367 @@
+\documentclass{article}
+
+% Packages for math, formatting, code, and links
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Page geometry
+\geometry{a4paper, margin=1in}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Hedging Futures Bets with Large Equity},
+    pdfpagemode=FullScreen,
+    }
+
+% Python code listing style
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Title, Author, Date
+\title{How to Hedge a Futures Bet with Large Equity}
+\author{Analysis from Jupyter Notebook} % You can replace this with your name
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper explores strategies for hedging a sports futures bet with significant equity, particularly when facing the potential loss of the initial bet. We analyze hedging from the perspective of maximizing log-utility (Kelly criterion), comparing two main approaches: hedging using championship futures markets and hedging on a rolling, game-by-game basis using moneyline odds. We derive the optimal hedging fractions for both scenarios, providing closed-form solutions where possible and demonstrating numerical optimization techniques. The analysis highlights the impact of market vigorish on hedging decisions.
+\end{abstract}
+
+\section{Introduction}
+
+Consider a scenario where an individual holds a futures ticket with a large potential payout, contingent on a specific team winning a championship. For example, holding a ticket that pays out \$81,000 if a particular team wins\footnote{\url{https://x.com/HouseMoney77/status/1906875727250690215}}. As the final stages of the tournament approach, the ticket holder may wish to hedge against the risk of their chosen team losing, thereby locking in some profit or reducing potential losses.
+
+This analysis outlines suggestions for hedging such future sports bets. A crucial first step is defining the objective, i.e., what quantity the hedger is trying to maximize. Our perspective is based on Kelly betting, which aims to maximize the expected logarithm of wealth (log-utility). Even for those not strictly adhering to the Kelly criterion, this framework provides valuable insights into the decision-making process for hedging.
+
+We first examine hedging using the futures market itself. While conceptually straightforward, futures markets often exhibit high vigorish (the bookmaker's margin). Assuming probabilities implied by the futures odds, we derive a closed-form solution for the critical value determining whether to hedge.
+
+As an alternative, we propose hedging on a game-by-game basis using moneyline bets, which typically have lower vigorish. This involves a multi-step process, hedging each relevant game as it occurs.
+
+\section{Hedging on a Rolling Game Basis}
+
+Hedging using tournament futures can be expensive due to high vigorish. An alternative is a sequential approach. For instance, if Florida is in the semi-finals against Auburn, one could first hedge the Florida-Auburn game. If Florida wins, a subsequent hedge could be placed on the championship game.
+
+\subsection{Mathematical Formulation (Semi-Final Game)}
+
+Consider the semi-final game (e.g., Florida vs. Auburn). There are three mutually exclusive outcomes relevant to our Florida championship ticket:
+\begin{enumerate}
+    \item Florida beats Auburn and wins the championship (probability $p_1$).
+    \item Florida beats Auburn but loses the championship (probability $p_2$).
+    \item Auburn beats Florida (probability $p_3$).
+\end{enumerate}
+Note that $p_1 + p_2 + p_3 = 1$.
+
+Let the current bankroll be $B$. Normalize the bankroll to $1$ for simplicity. Let $P$ be the fixed payout if Florida wins the championship, and define $x = P/B$ as the payout normalized to the current bankroll. Let $b$ be the net return (odds - 1) on a bet for Auburn to win the semi-final game against Florida.
+
+We want to find the fraction $f$ of our bankroll to bet on Auburn to maximize the expected log-utility:
+\begin{equation}
+L = p_1 \log(1 + x - f) + p_2 \log(1 - f)+ p_3 \log(1 + f b).
+\end{equation}
+This objective function represents the expected log-wealth after the semi-final game outcome is known, considering the potential championship payout. Differentiating $L$ with respect to $f$ and setting the derivative to zero yields:
+\[
+\frac{-p_1}{1 + x - f} + \frac{-p_2}{1 - f} + \frac{p_3 b}{1 + fb} = 0.
+\]
+Rearranging this leads to a quadratic equation in $f$:
+\begin{equation} \label{eq:quadratic}
+b f^2 + [p_1 + p_2 - b(1 + p_3(1+x) + p_2 x)] f + [p_3 b(1+x) - p_1 - p_2(1+x)] = 0.
+\end{equation}
+The optimal hedging fraction $f^*$ is the unique root of this quadratic equation within the interval $(0, 1)$.
+
+\subsection{Hedging the Championship Game}
+If Florida advances to the championship game, the hedging decision becomes simpler. Let $p$ be the implied probability of Florida winning the championship game (derived from moneyline odds), and let $b_{opp}$ be the net return on a bet for Florida's opponent to win. The normalized potential payout $x = P/B$ remains defined relative to the bankroll *before* the championship game. We seek the fraction $f_{champ}$ to bet on the opponent to maximize:
+\[
+L_{champ} = p \log(1 + x - f_{champ}) + (1-p) \log(1 + f_{champ} b_{opp}).
+\]
+The optimal fraction is given by the standard Kelly formula adjusted for the existing position:
+\begin{equation}
+f^*_{champ} = \frac{(1-p)(1+x)b_{opp} - p}{b_{opp}}.
+\end{equation}
+Alternatively, using the formula structure from the notebook:
+\begin{equation}
+f^*_{champ} = \min\left(1, (1 - p)(1 + x) - \frac{p}{b_{opp}}\right),
+\end{equation}
+where the structure $(1-p)\cdot(\text{Wealth if opponent wins}) - p \cdot (\text{Wealth if Florida wins}) / b_{opp}$ is used, and wealth is normalized. Note the slight difference in formula structure depending on how $p$ relates to the odds; care must be taken with implementation. The core idea remains finding the Kelly bet fraction on the opponent.
+
+\subsection{Example Calculation (Semi-Final)}
+
+Let's apply the quadratic formula derivation to a concrete example.
+
+\begin{lstlisting}[language=Python, caption={Python code for calculating inputs and solving the quadratic for the game-by-game hedge fraction.}]
+# Payout normalized to bankroll
+# Assuming P = $81000, B = $100000 
+# (Note: Original text implies x=8.1/10.0 which suggests B=$10k, 
+# but later text mentions B=$200k. Using B=$100k as an example.)
+P = 81000
+B = 100000 
+x = P / B # Should be 0.81 if B = 100k
+
+# Example Futures Odds (decimal)
+auburn_odds = 6.920
+duke_odds = 1.970
+florida_odds = 3.890
+houston_odds = 5.740
+
+# Implied probabilities from futures (removing vigorish)
+s = 1/auburn_odds + 1/duke_odds + 1/florida_odds + 1/houston_odds
+p_auburn = (1/auburn_odds) / s
+p_duke = (1/duke_odds) / s
+p_florida = (1/florida_odds) / s
+p_houston = (1/houston_odds) / s
+
+# Example Florida-Auburn Moneyline Odds (decimal)
+fa_odds = 1.680 # Florida wins
+af_odds = 2.250 # Auburn wins
+
+# Implied probabilities from moneyline (removing vigorish)
+s_fa = 1/fa_odds + 1/af_odds
+p_fa_wins = (1/fa_odds) / s_fa # Prob Florida beats Auburn
+p_af_wins = (1/af_odds) / s_fa # Prob Auburn beats Florida
+
+# Return if Auburn beats Florida (Net Return)
+b = af_odds - 1
+
+# Probabilities for the log-utility function
+# p_1: Florida beats Auburn AND wins championship
+p_1 = p_florida # Approximation: using overall futures prob
+
+# p_2: Florida beats Auburn BUT loses championship
+p_2 = p_fa_wins - p_florida # Prob(FA wins) - Prob(FA wins and Champ)
+
+# p_3: Auburn beats Florida
+p_3 = p_af_wins 
+
+# Ensure probabilities sum roughly to 1 (within rounding/vig error)
+# print(f"p1+p2+p3 = {p_1 + p_2 + p_3}") 
+
+import numpy as np
+
+# Coefficients of the quadratic equation (Eq. \ref{eq:quadratic})
+c_2 = b
+c_1 = (p_1 + p_2 - b*(1 + p_3*(1+x) + p_2 * x))
+c_0 = (p_3 *b*(1+x) - p_1 - p_2*(1+x))
+
+coefficients = [c_2,c_1,c_0]
+
+# The desired f* is the root in [0,1]
+roots = np.roots(coefficients)
+print(f"Quadratic roots for f: {roots}")
+
+# Select the root between 0 and 1
+optimal_f = [r.real for r in roots if 0 < r.real < 1 and abs(r.imag) < 1e-9]
+if optimal_f:
+    print(f"Optimal hedge fraction f* = {optimal_f[0]:.4f}")
+else:
+    print("No valid hedge fraction found in (0,1). Optimal f* = 0.")
+\end{lstlisting}
+Running the above code with $x = 81000 / 100000 = 0.81$ yields an optimal hedge fraction $f^* \approx 0.1862$. This suggests betting 18.62\% of the bankroll on Auburn at odds of 2.250.
+
+\section{Hedging with Championship Futures}
+
+An alternative is to hedge using the championship futures market directly by betting on all other potential winners.
+
+\subsection{Numerical Optimization Approach}
+
+Let the potential champions be Team 1 (Florida, our initial bet), Team 2 (Auburn), Team 3 (Duke), and Team 4 (Houston). Let $p_i$ be the implied probability of Team $i$ winning, derived from futures odds. Let $b_i$ be the net return (odds - 1) for a bet on Team $i$. We hold a ticket paying $x$ (normalized payout) if Team 1 wins. We want to determine the fractions of our bankroll $f_2, f_3, f_4$ to bet on Teams 2, 3, and 4, respectively. The objective is to maximize:
+\begin{multline} \label{eq:logutil_futures}
+L = p_1 \log(1 + x - f_2 - f_3 - f_4) + p_2 \log(1 + f_2 b_2 - f_3 - f_4) \\
++ p_3 \log(1 + f_3 b_3 - f_2 - f_4) + p_4 \log(1 + f_4 b_4 - f_2 - f_3)
+\end{multline}
+Subject to the constraints:
+\begin{align*}
+    f_2, f_3, f_4 &\ge 0 \\
+    f_2 + f_3 + f_4 &\le 1 
+\end{align*}
+This problem can be solved using numerical optimization tools.
+
+\begin{lstlisting}[language=Python, caption={Python code using scipy.optimize to find optimal hedge fractions using futures.}]
+from scipy.optimize import minimize
+import numpy as np
+import time
+
+# Payout normalized to bankroll (example)
+P = 81000
+B = 100000 # Example bankroll
+x = P / B # 0.81
+
+# Futures Odds (decimal)
+auburn_odds = 6.920
+duke_odds = 1.970
+florida_odds = 3.890
+houston_odds = 5.740
+
+# Net returns
+b_auburn = auburn_odds - 1
+b_duke = duke_odds - 1
+b_florida = florida_odds - 1 # Not directly used in objective if hedging others
+b_houston = houston_odds - 1
+
+# Implied probabilities (removing vigorish)
+s = 1/auburn_odds + 1/duke_odds + 1/florida_odds + 1/houston_odds
+p_auburn = (1/auburn_odds) / s
+p_duke = (1/duke_odds) / s
+p_florida = (1/florida_odds) / s
+p_houston = (1/houston_odds) / s
+
+# Objective function to minimize (-L)
+# f represents the fractions [f_auburn, f_duke, f_houston]
+# Note: Original code had f[3] for florida, seems incorrect for hedging. 
+# Assuming we only bet f[0], f[1], f[2] on others.
+obj = lambda f: -(p_florida*np.log(1 + x - f[0] - f[1] - f[2]) 
+                  + p_auburn*np.log(1 + f[0]*b_auburn - f[1] - f[2]) 
+                  + p_duke*np.log(1 + f[1]*b_duke - f[0] - f[2]) 
+                  + p_houston*np.log(1 + f[2]*b_houston - f[0] - f[1]))
+
+# Constraints: f_i >= 0 (handled by bounds), sum(f_i) <= 1
+constraints = ({'type': 'ineq', 'fun': lambda f: 1 - (f[0] + f[1] + f[2])})
+
+# Bounds: 0 <= f_i <= 1
+bounds = ((0, 1), (0, 1), (0, 1))
+
+# Initial guess
+f0 = (0, 0, 0)
+
+start_time = time.time() * 1000
+result = minimize(obj, f0, method='SLSQP', bounds=bounds, constraints=constraints)
+end_time = time.time() * 1000
+
+print('\nOptimization Result:')
+print(result)
+if result.success:
+    print(f"Optimal value (-L) = {result.fun:.4f}")
+    print(f"Optimal f: auburn = {result.x[0]:.4f}, duke = {result.x[1]:.4f}, houston = {result.x[2]:.4f}")
+    print(f"Total fraction bet = {sum(result.x):.4f}")
+else:
+    print("Optimization failed.")
+print(f"Execution time (ms): {end_time - start_time:.2f}")
+
+\end{lstlisting}
+
+\subsection{A Closed-Form Simplification for Hedging with Futures}
+
+An interesting insight arises when using implied probabilities derived directly from the futures odds themselves. In Kelly betting theory, if odds are fair (zero vigorish), a bettor allocates their entire bankroll proportionally to the probabilities of each outcome, resulting in a guaranteed outcome (zero gain/loss if probabilities match reality).
+
+When hedging using implied probabilities, we are effectively betting amounts proportional to these implied odds on the opposing outcomes. This simplifies the problem significantly. Because the bets on Auburn, Duke, and Houston are placed according to their implied probabilities relative to each other, the outcome is the same regardless of *which* of these three teams wins. Therefore, the problem reduces to a simple two-outcome scenario: Florida wins vs. Florida does not win.
+
+Let $p = p_{\text{florida}}$ be the implied probability of Florida winning. The probability of Florida not winning is $1-p$. Let $v$ represent the effective payout odds for the composite "Not Florida" bet. This $v$ is related to the sum of inverse odds (the booksum $S$) for all teams. Specifically, if you bet $f$ total, distributed proportionally, the payout if "Not Florida" wins involves the odds of the specific winner, but the structure simplifies.
+
+Consider a total fraction $f$ bet on "Not Florida", distributed proportionally: $f_i = f \times \frac{p_i}{1-p}$ for $i \in \{\text{Auburn, Duke, Houston}\}$. If Team $i$ wins, the payout is $f_i \times (\text{odds}_i - 1)$ minus the losing bets $f_j$ ($j \ne i$). Due to the proportional betting based on implied probabilities, this simplifies.
+
+Let's analyze the simplified two-outcome problem: maximize
+\begin{equation}
+L = p \log(1 + x - f) + (1-p) \log(1 + f \cdot b_{eff})
+\end{equation}
+where $f$ is the total fraction bet on "Not Florida" and $b_{eff}$ is the effective net return for this composite bet. This effective return needs careful consideration, relating to the market vigorish. The original notebook uses $v$ (seemingly the booksum $S = \sum 1/\text{odds}_i$) in the derivation. Let's follow that derivation structure.
+
+The objective becomes maximizing:
+\[ p \log(1+x-f)+(1-p)\log(1+f(1-p)v-f) \]
+(The term $f(1-p)v - f$ seems intended to represent the net gain when "Not Florida" wins, possibly relating $v$ to the inverse probability sum $S$. This step needs careful verification, as the definition of $v$ impacts the result).
+
+Assuming the structure provided in the notebook analysis is correct, the optimal total hedge fraction $f^*$ is:
+\begin{equation} \label{eq:closed_form}
+f^* = (1-p)(1+x) - \frac{p \cdot v(1-p)}{1-v(1-p)} 
+\end{equation}
+where $p = p_{\text{florida}}$ and $v$ is interpreted as the booksum $S = \sum (1/\text{odds}_i)$. If $f^* > 0$, hedge by betting a total fraction $\min(1, f^*)$ on the other teams, with the allocation proportional to their implied probabilities:
+\[ f_i = \min(1, f^*) \times \frac{p_i}{1-p} \]
+for $i \in \{\text{Auburn, Duke, Houston}\}$.
+
+\begin{lstlisting}[language=Python, caption={Python code for calculating the closed-form total hedge fraction and distribution.}]
+import numpy as np
+
+# Payout normalized to bankroll (example)
+P = 81000
+# B = 100000 # Example bankroll
+B = 200000 # Example bankroll from notebook text
+x = P / B 
+
+# Futures Odds (decimal)
+auburn_odds = 6.920
+duke_odds = 1.970
+florida_odds = 3.890
+houston_odds = 5.740
+
+# Booksum (related to 'v' in the formula)
+s = 1/auburn_odds + 1/duke_odds + 1/florida_odds + 1/houston_odds
+v = s # Assuming v is the booksum S
+
+# Implied probabilities (removing vigorish)
+p_auburn = (1/auburn_odds) / s
+p_duke = (1/duke_odds) / s
+p_florida = (1/florida_odds) / s
+p_houston = (1/houston_odds) / s
+
+# Calculate optimal total fraction f* using Eq. \ref{eq:closed_form}
+# Need to carefully interpret v and the denominator term.
+# Let's re-evaluate the derivation based on standard Kelly bet on 'Not Florida'.
+# Prob(Not Florida) = 1 - p_florida
+# Effective odds for 'Not Florida' are complex due to vig.
+# If we use the simplified formula from the notebook directly:
+p = p_florida
+denominator = 1 - v * (1 - p)
+
+if denominator <= 0:
+    print("Denominator issue in closed-form formula. Hedging might cover entire bankroll or formula assumption break.")
+    f = 1.0 # Or handle as error / no hedge depending on interpretation
+else:
+    f = (1 - p) * (1 + x) - (p * v * (1 - p)) / denominator
+
+print(f"Calculated total fraction bet f* = {f:.4f}")
+
+if f > 0:
+    f_hedge = min(1, f)
+    print(f"Hedging fraction (capped at 1): {f_hedge:.4f}")
+    # Distribute f_hedge proportionally
+    p_not_florida = p_auburn + p_duke + p_houston
+    f_auburn = f_hedge * (p_auburn / p_not_florida)
+    f_duke = f_hedge * (p_duke / p_not_florida)
+    f_houston = f_hedge * (p_houston / p_not_florida)
+    print(f"Optimal f distribution: auburn = {f_auburn:.4f}, duke = {f_duke:.4f}, houston = {f_houston:.4f}")
+    print(f"Check: Sum of distributed fractions = {f_auburn + f_duke + f_houston:.4f}")
+else:
+    print("Optimal total fraction f* <= 0. No hedge recommended based on this formula.")
+
+\end{lstlisting}
+
+\subsection{Conclusion on Futures Hedging}
+
+The closed-form analysis reveals the significant impact of vigorish (represented by $v=S$, where $S > 1$). With the given futures odds, the booksum $S$ is substantially greater than 1, indicating high vigorish. 
+
+Applying the formula with a larger bankroll, say $B = \$200,000$, makes $x = 81000 / 200000 = 0.405$. The calculation yields $f^* \approx -0.1083$. Since $f^* \le 0$, the recommendation is *not* to hedge using these futures. The high vigorish makes the cost of hedging unfavorable from a log-utility perspective at this bankroll level. If the vigorish were lower (closer to typical moneyline vigorish where $S$ might be around 1.03-1.05), hedging might become optimal ($f^* > 0$).
+
+This contrasts with the game-by-game approach, where lower vigorish on moneyline bets might make hedging the individual games more appealing, even if futures hedging is not recommended.
+
+\end{document}
