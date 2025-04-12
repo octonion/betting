@@ -349,8 +349,12 @@ def get_current_time_string():
 # odds_ex = [2.6, 3.5, 5.1, 11.0] # Max at F=1
 
 # Example 2 (from previous interaction)
-probabilities_ex = [0.5, 0.25, 0.25]
-odds_ex = [1.5, 3.75, 6.0] # Interior Max Expected
+#probabilities_ex = [0.5, 0.25, 0.25]
+#odds_ex = [1.5, 3.75, 6.0] # Interior Max Expected
+
+# Example 3
+probabilities_ex = [0.25, 0.1, 0.1, 0.4, 0.15]
+odds_ex = [1/0.2, 1/0.06667059, 1/0.04, 1/0.4, 1/0.46976471]
 
 print(f"Running Kelly Analysis at: {get_current_time_string()}")
 print("\nAnalyzing Kelly Regions for the example:")

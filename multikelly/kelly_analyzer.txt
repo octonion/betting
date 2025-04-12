@@ -1,28 +1,42 @@
-Running Kelly Analysis at: 2025-04-12 07:28:39 EDT-0400
+Running Kelly Analysis at: 2025-04-12 08:32:19 EDT-0400
 
 Analyzing Kelly Regions for the example:
-Probabilities: [0.5, 0.25, 0.25]
-Odds: [1.5, 3.75, 6.0]
+Probabilities: [0.25, 0.1, 0.1, 0.4, 0.15]
+Odds: [5.0, 14.99911730194678, 25.0, 2.5, 2.128725250562138]
 --------------------------------------------------
 
 --- Iteratively Finding Exit Points and Checking Regions for Max Growth ---
 
 Iteration 1: Analyzing region F > F_k (where F_k is exit point of outcome below)
-  Current Active Set I = [0, 1, 2]
-  Min p*o = 0.7500 found for outcome k = 0 (Next to exit)
-  S_p = 1.000000, S_o = 1.100000
+  Current Active Set I = [0, 1, 2, 3, 4]
+  Min p*o = 0.3193 found for outcome k = 4 (Next to exit)
+  S_p = 1.000000, S_o = 1.176435
   Region Check: Potential Max F from lambda=1 condition = 1.000000
-  Calculated exit threshold F_0 = 0.189189 (Lower bound for current set's validity)
-  Region Check: Potential Max F is outside the valid range (0.1892, 1.0000).
+  Calculated exit threshold F_4 = 0.661628 (Lower bound for current set's validity)
+  Region Check: Potential Max F is outside the valid range (0.6616, 1.0000).
 
 Iteration 2: Analyzing region F > F_k (where F_k is exit point of outcome below)
+  Current Active Set I = [0, 1, 2, 3]
+  Min p*o = 1.0000 found for outcome k = 3 (Next to exit)
+  S_p = 0.850000, S_o = 0.706671
+  Region Check: Potential Max F from lambda=1 condition = 0.488630
+  Calculated exit threshold F_3 = 0.125361 (Lower bound for current set's validity)
+  !!! Found Valid Interior Max Candidate at F_opt = 0.488630 in region (0.1254, 0.6616) !!!
+      --> Confirmed Global Max G = 0.087356
+
+Iteration 3: Analyzing region F > F_k (where F_k is exit point of outcome below)
+  Current Active Set I = [0, 1, 2]
+  Min p*o = 1.2500 found for outcome k = 0 (Next to exit)
+  S_p = 0.450000, S_o = 0.306671
+  Region Check: Potential Max F from lambda=1 condition = 0.206726
+  Calculated exit threshold F_0 = 0.050629 (Lower bound for current set's validity)
+
+Iteration 4: Analyzing region F > F_k (where F_k is exit point of outcome below)
   Current Active Set I = [1, 2]
-  Min p*o = 0.9375 found for outcome k = 1 (Next to exit)
-  S_p = 0.500000, S_o = 0.433333
-  Region Check: Potential Max F from lambda=1 condition = 0.117647
-  Calculated exit threshold F_1 = 0.090909 (Lower bound for current set's validity)
-  !!! Found Valid Interior Max Candidate at F_opt = 0.117647 in region (0.0909, 0.1892) !!!
-      --> Confirmed Global Max G = 0.022650
+  Min p*o = 1.4999 found for outcome k = 1 (Next to exit)
+  S_p = 0.200000, S_o = 0.106671
+  Region Check: Potential Max F from lambda=1 condition = 0.104474
+  Calculated exit threshold F_1 = 0.025978 (Lower bound for current set's validity)
 
 --- Finished Iterations ---
 
@@ -33,14 +47,16 @@ Iteration 2: Analyzing region F > F_k (where F_k is exit point of outcome below)
 --------------------------------------------------------------------------------
 Exiting k  | Exit F_k     | G at F_k     | Active Set Before    | Fractions f_i at F_k
 --------------------------------------------------------------------------------
-0          | 0.189189     | 0.019352     | [0, 1, 2]            | 0.0000, 0.0541, 0.1351
-1          | 0.090909     | 0.022191     | [1, 2]               | 0.0000, 0.0000, 0.0909
+4          | 0.661628     | 0.074703     | [0, 1, 2, 3, 4]      | 0.1973, 0.0834, 0.0924, 0.2885, 0.0000
+3          | 0.125361     | 0.054011     | [0, 1, 2, 3]         | 0.0437, 0.0292, 0.0525, 0.0000, 0.0000
+0          | 0.050629     | 0.035585     | [0, 1, 2]            | 0.0000, 0.0127, 0.0380, 0.0000, 0.0000
+1          | 0.025978     | 0.024767     | [1, 2]               | 0.0000, 0.0000, 0.0260, 0.0000, 0.0000
 --------------------------------------------------------------------------------
 
 2. Global Maximum Growth Point:
-  Source: Interior optimum based on lambda=1 in region F > 0.0909
-  Max Growth occurs at F_opt = 0.117647
-    Active Set at F_opt: [1, 2]
+  Source: Interior optimum based on lambda=1 in region F > 0.1254
+  Max Growth occurs at F_opt = 0.488630
+    Active Set at F_opt: [0, 1, 2, 3]
     Optimal Fractions f_i at F_opt:
-      [0.0000, 0.0147, 0.1029]
-    Maximum Expected Log Growth G_opt = 0.022650
+      [0.1477, 0.0659, 0.0795, 0.1955, 0.0000]
+    Maximum Expected Log Growth G_opt = 0.087356
