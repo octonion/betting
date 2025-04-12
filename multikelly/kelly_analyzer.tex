@@ -1,0 +1,413 @@
+\documentclass[11pt, letterpaper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx} % Added for potential figures, though not used yet
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\geometry{letterpaper, margin=1in}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Analysis of the Constrained Kelly Criterion},
+    pdfpagemode=FullScreen,
+    }
+
+\urlstyle{same}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+\newcommand{\E}{\mathbb{E}} % Expectation
+\newcommand{\R}{\mathbb{R}} % Real numbers
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{Analysis of the Kelly Criterion Subject to a Fixed Total Bet Fraction}
+\author{Christopher D. Long and Gemini 2.5}
+\date{Saturday, April 12, 2025} % Automatically updated timestamp would require \usepackage{datetime} etc.
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The Kelly criterion provides a framework for optimal capital allocation in betting scenarios by maximizing the expected logarithm of wealth, leading to maximal long-term growth rates. This document analyzes a specific variant of the Kelly problem for multiple, mutually exclusive outcomes where the total fraction of the bankroll wagered, $F$, is constrained to a fixed value ($0 < F \le 1$). We derive the optimality conditions using the Karush-Kuhn-Tucker (KKT) framework and obtain an explicit formula for the optimal betting fractions $f_i(F)$ within regions where the set of active bets is constant, demonstrating their linear dependence on $F$. An iterative algorithm is presented to determine the critical values $F_k$ at which outcomes exit the active portfolio as $F$ decreases, based on the $p_k o_k$ product. Furthermore, we leverage the Lagrange multiplier interpretation ($\lambda=1$) to identify the total fraction $F_{opt}$ that yields the global maximum expected log-growth rate $G_{opt}$. The theory and algorithm are illustrated with a detailed numerical example.
+\end{abstract}
+
+\section{Introduction}
+
+The Kelly criterion, originally developed by John L. Kelly Jr. \cite{Kelly1956}, is a cornerstone of investment and gambling theory. It prescribes allocating capital to maximize the expected logarithm of wealth, which, under certain conditions, almost surely maximizes the long-term growth rate of capital. While often applied to single bets or sequences of bets, its extension to simultaneous bets on multiple mutually exclusive outcomes is highly relevant in portfolio management and sports betting.
+
+Standard formulations often seek the optimal fractions $f_i^*$ without an explicit constraint on the total capital deployed, $\sum f_i^*$. However, practical scenarios or risk management considerations might impose a limit on the total fraction $F$ that can be wagered, such that $\sum f_i = F$. This document focuses on analyzing the optimal strategy under this specific constraint.
+
+We consider a scenario with $N$ mutually exclusive outcomes for a single event. Outcome $i$ occurs with probability $p_i > 0$ (where $\sum_{i=1}^N p_i = 1$) and offers decimal odds $o_i > 1$. A fraction $f_i$ of the current bankroll is wagered on outcome $i$. The problem is to find the fractions $f_1, \dots, f_N$ that maximize the expected log-growth rate, subject to the constraints $f_i \ge 0$ and $\sum_{i=1}^N f_i = F$, where $F$ is a fixed constant in $(0, 1]$.
+
+Analysis reveals interesting properties: as $F$ decreases, less advantageous bets are systematically excluded, and within the regions defined by these exclusions, the allocation to active bets scales linearly with $F$. We will derive the conditions governing this behavior, present an algorithm to find the critical exit points $F_k$, and, importantly, identify the specific fraction $F_{opt}$ that yields the globally optimal growth rate $G_{opt}$ for this constrained problem.
+
+This document is structured as follows: Section \ref{sec:formulation} presents the mathematical formulation. Section \ref{sec:kkt} derives the optimality conditions using the KKT framework. Section \ref{sec:fractions} derives the formula for optimal fractions and proves linearity. Section \ref{sec:algorithm} develops the algorithm for finding exit points and the optimal growth point, including the underlying theory. Section \ref{sec:example} provides a detailed worked example. Section \ref{sec:conclusion} concludes the discussion.
+
+\section{Mathematical Formulation}
+\label{sec:formulation}
+
+Let $W_0$ be the initial bankroll. Let $f_i$ be the fraction of $W_0$ bet on outcome $i$, for $i=1, \dots, N$. We require $f_i \ge 0$ for all $i$. We impose the constraint that the total fraction wagered is fixed at $F$:
+\begin{equation}
+    \sum_{i=1}^N f_i = F, \quad \text{where } 0 < F \le 1.
+\end{equation}
+If outcome $k$ occurs (with probability $p_k$), the bet on outcome $k$ pays $f_k W_0 \times o_k$, while all other bets $f_j W_0$ (for $j \neq k$) are lost. The wealth after the event, $W_1^{(k)}$, is:
+\begin{align}
+    W_1^{(k)} &= W_0 - \sum_{j=1}^N (f_j W_0) + (f_k W_0 \times o_k) \\
+              &= W_0 \left( 1 - \sum_{j=1}^N f_j + f_k o_k \right) \\
+              &= W_0 (1 - F + f_k o_k) \quad \text{(since } \sum f_j = F \text{)}.
+\end{align}
+The return factor if outcome $k$ occurs is $R_k = W_1^{(k)} / W_0 = 1 - F + f_k o_k$.
+
+The objective is to maximize the expected logarithm of the return factor (which is equivalent to maximizing the expected logarithm of the final wealth $W_1$):
+\begin{equation}
+    G(f_1, \dots, f_N) = \E[\ln(W_1/W_0)] = \sum_{k=1}^N p_k \ln(R_k) = \sum_{k=1}^N p_k \ln(1 - F + f_k o_k).
+    \label{eq:objective}
+\end{equation}
+The optimization problem is therefore:
+\begin{align}
+    \max_{f_1, \dots, f_N} \quad & G = \sum_{k=1}^N p_k \ln(1 - F + f_k o_k) \\
+    \text{subject to} \quad & \sum_{i=1}^N f_i = F \label{eq:constraint_sum} \\
+                        & f_i \ge 0, \quad \forall i=1, \dots, N \label{eq:constraint_nonneg}
+\end{align}
+
+\section{Optimality Conditions (KKT)}
+\label{sec:kkt}
+
+This is a constrained optimization problem with an equality constraint and non-negativity constraints. Since the objective function $G$ is concave (as the logarithm is concave and the argument is linear in $f_k$, and the sum of concave functions is concave) and the constraints are linear, the Karush-Kuhn-Tucker (KKT) conditions are necessary and sufficient for optimality.
+
+We form the Lagrangian:
+\begin{equation}
+    \mathcal{L}(f, \lambda, \mu) = \sum_{k=1}^N p_k \ln(1 - F + f_k o_k) - \lambda \left( \sum_{i=1}^N f_i - F \right) - \sum_{i=1}^N \mu_i (-f_i)
+\end{equation}
+where $\lambda$ is the Lagrange multiplier for the equality constraint \eqref{eq:constraint_sum} and $\mu_i \ge 0$ are the multipliers for the non-negativity constraints \eqref{eq:constraint_nonneg}.
+
+The KKT conditions are:
+\begin{enumerate}
+    \item \textbf{Stationarity:} $\frac{\partial \mathcal{L}}{\partial f_i} = 0$ for all $i=1, \dots, N$.
+    \begin{equation}
+        \frac{p_i o_i}{1 - F + f_i o_i} - \lambda + \mu_i = 0 \label{eq:stationarity}
+    \end{equation}
+    \item \textbf{Primal Feasibility:} Constraints \eqref{eq:constraint_sum} and \eqref{eq:constraint_nonneg} must hold.
+    \begin{gather}
+        \sum_{i=1}^N f_i = F \\
+        f_i \ge 0
+    \end{gather}
+    \item \textbf{Dual Feasibility:}
+    \begin{equation}
+        \mu_i \ge 0
+    \end{equation}
+    \item \textbf{Complementary Slackness:}
+    \begin{equation}
+        \mu_i f_i = 0 \label{eq:complementary}
+    \end{equation}
+\end{enumerate}
+
+From the complementary slackness condition \eqref{eq:complementary}, we have two cases for each $i$:
+
+\textbf{Case 1: Active Bet ($f_i > 0$)}
+If $f_i > 0$, then $\mu_i$ must be 0. The stationarity condition \eqref{eq:stationarity} becomes:
+\begin{equation}
+    \frac{p_i o_i}{1 - F + f_i o_i} = \lambda \label{eq:kkt_active}
+\end{equation}
+This implies that for all outcomes actively included in the portfolio, the ratio of the probability-weighted odds payout to the resulting wealth factor is equal to the common Lagrange multiplier $\lambda$. Also note that since $p_i > 0$, $o_i > 1$, and the denominator must be positive for $\ln$ to be defined, we must have $\lambda > 0$.
+
+\textbf{Case 2: Inactive Bet ($f_i = 0$)}
+If $f_i = 0$, then $\mu_i \ge 0$. The stationarity condition \eqref{eq:stationarity} becomes:
+\begin{equation}
+    \frac{p_i o_i}{1 - F + 0 \cdot o_i} - \lambda + \mu_i = 0 \implies \frac{p_i o_i}{1 - F} = \lambda - \mu_i
+\end{equation}
+Since $\mu_i \ge 0$, this implies:
+\begin{equation}
+    \frac{p_i o_i}{1 - F} \le \lambda \label{eq:kkt_inactive}
+\end{equation}
+This means that for outcomes not included in the portfolio, the expected marginal return relative to the base state ($1-F$) is less than or equal to the marginal value $\lambda$ obtained from the active bets.
+
+\section{Optimal Fractions and Linearity}
+\label{sec:fractions}
+
+Let $I = \{i \mid f_i > 0\}$ be the index set of active bets for a given $F$. From equation \eqref{eq:kkt_active}, for $i \in I$, we can solve for $f_i$:
+\begin{align}
+    p_i o_i &= \lambda (1 - F + f_i o_i) \\
+    p_i o_i &= \lambda (1 - F) + \lambda f_i o_i \\
+    \lambda f_i o_i &= p_i o_i - \lambda (1 - F) \\
+    f_i &= \frac{p_i}{\lambda} - \frac{1 - F}{o_i} \quad \text{for } i \in I \label{eq:fi_lambda}
+\end{align}
+To find $\lambda$, we use the constraint $\sum_{i \in I} f_i = F$:
+\begin{align*}
+    F &= \sum_{i \in I} \left( \frac{p_i}{\lambda} - \frac{1 - F}{o_i} \right) \\
+    F &= \frac{1}{\lambda} \sum_{i \in I} p_i - (1 - F) \sum_{i \in I} \frac{1}{o_i}
+\end{align*}
+Let $S_p = \sum_{i \in I} p_i$ and $S_o = \sum_{i \in I} \frac{1}{o_i}$.
+\begin{align*}
+    F &= \frac{S_p}{\lambda} - (1 - F) S_o \\
+    \frac{S_p}{\lambda} &= F + (1 - F) S_o \\
+    \frac{1}{\lambda} &= \frac{F + (1 - F) S_o}{S_p} \label{eq:lambda_inv}
+\end{align*}
+Note that $S_p > 0$ since $I$ is non-empty for $F > 0$. The denominator in \eqref{eq:lambda_inv} is $S_p > 0$. The numerator $F + (1-F)S_o$ must also be positive since $\lambda > 0$.
+
+Substituting \eqref{eq:lambda_inv} back into \eqref{eq:fi_lambda}:
+\begin{equation}
+    f_i(F) = p_i \left( \frac{F + (1 - F) S_o}{S_p} \right) - \frac{1 - F}{o_i} \quad \text{for } i \in I
+    \label{eq:fi_explicit}
+\end{equation}
+For $j \notin I$, $f_j(F) = 0$.
+
+\begin{proposition}[Linearity of Optimal Fractions]
+Within a region of $F$ where the active set $I$ is constant, the optimal fraction $f_i(F)$ for each $i \in I$ is a linear function of $F$.
+\end{proposition}
+\begin{proof}
+Rearranging equation \eqref{eq:fi_explicit} for $i \in I$:
+\begin{align*}
+    f_i(F) &= \frac{p_i}{S_p} (F + S_o - F S_o) - \frac{1}{o_i} (1 - F) \\
+           &= \frac{p_i F}{S_p} + \frac{p_i S_o}{S_p} - \frac{p_i F S_o}{S_p} - \frac{1}{o_i} + \frac{F}{o_i} \\
+           &= F \left( \frac{p_i}{S_p} - \frac{p_i S_o}{S_p} + \frac{1}{o_i} \right) + \left( \frac{p_i S_o}{S_p} - \frac{1}{o_i} \right) \\
+           &= F \left( \frac{p_i(1 - S_o)}{S_p} + \frac{1}{o_i} \right) + \left( \frac{p_i S_o}{S_p} - \frac{1}{o_i} \right)
+\end{align*}
+This is clearly in the form $f_i(F) = a_i F + b_i$, where $a_i$ and $b_i$ are constants depending only on $p_j$, $o_j$ for $j \in I$. Thus, $f_i(F)$ is linear in $F$ as long as the active set $I$ remains constant.
+\end{proof}
+
+\section{Algorithm for Regions, Exits, and Optimal Growth}
+\label{sec:algorithm}
+
+The active set $I$ is not constant across all $F \in (0, 1]$. As $F$ varies, the conditions $f_i(F) \ge 0$ (derived from \eqref{eq:fi_explicit}) and \eqref{eq:kkt_inactive} determine the composition of $I$.
+
+\subsection{Exit Order}
+
+Consider the system as $F$ decreases from $F=1$. Initially (for $F$ slightly below 1), potentially all outcomes might be in $I$. As $F$ decreases, some $f_i(F)$ calculated by \eqref{eq:fi_explicit} will hit zero. The condition $f_i(F)=0$ is equivalent to the boundary condition between active and inactive bets:
+$\frac{p_i o_i}{1 - F} = \lambda$.
+
+\begin{proposition}[Exit Order]
+As the total fraction $F$ decreases, the next outcome $k$ to exit the current active set $I$ is the one with the minimum value of the product $p_k o_k$ among all $i \in I$.
+\end{proposition}
+\begin{proof}
+The boundary/exit condition is $\frac{p_k o_k}{1 - F} = \lambda(F)$, where $\lambda(F) = \frac{S_p}{F + (1 - F) S_o}$.
+Substituting $\lambda(F)$, the condition becomes $p_k o_k = \frac{S_p(1 - F)}{F + (1 - F) S_o}$.
+Let $RHS(F) = \frac{S_p(1 - F)}{F + (1 - F) S_o}$. We need to analyze how $RHS(F)$ changes as $F$ decreases.
+Taking the derivative with respect to $F$ (treating $S_p, S_o$ as constants for the current set $I$):
+\begin{align*}
+\frac{d(RHS)}{dF} &= S_p \frac{-1(F + (1 - F) S_o) - (1 - F)(1 - S_o)}{(F + (1 - F) S_o)^2} \\
+           &= S_p \frac{-F - S_o + F S_o - (1 - S_o - F + F S_o)}{(F + (1 - F) S_o)^2} \\
+           &= S_p \frac{-S_o - 1 + S_o}{(F + (1 - F) S_o)^2} = \frac{-S_p}{(F + (1 - F) S_o)^2}
+\end{align*}
+Since $S_p > 0$ and the denominator is squared (and positive), $d(RHS)/dF < 0$. This means $RHS(F)$ is a strictly decreasing function of $F$.
+Therefore, as $F$ decreases, $RHS(F)$ increases. The exit condition $p_k o_k = RHS(F)$ will be met first (i.e., at the highest value of $F$) for the outcome $k \in I$ that has the minimum value of $p_k o_k$.
+\end{proof}
+
+\subsection{Exit Threshold \texorpdfstring{$F_k$}{Fk}}
+
+To find the value $F_k$ at which a specific outcome $k$ (identified as having the minimum $p_k o_k$ in the current set $I$) exits, we set $f_k(F_k) = 0$ in equation \eqref{eq:fi_explicit}:
+\begin{align*}
+    0 &= p_k \left( \frac{F_k + (1 - F_k) S_o}{S_p} \right) - \frac{1 - F_k}{o_k} \\
+    \frac{p_k (F_k + (1 - F_k) S_o)}{S_p} &= \frac{1 - F_k}{o_k} \\
+    p_k o_k (F_k + S_o - F_k S_o) &= S_p (1 - F_k) \\
+    p_k o_k F_k + p_k o_k S_o - p_k o_k F_k S_o &= S_p - S_p F_k \\
+    F_k (p_k o_k - p_k o_k S_o + S_p) &= S_p - p_k o_k S_o \\
+    F_k (S_p + p_k o_k (1 - S_o)) &= S_p - p_k o_k S_o
+\end{align*}
+Assuming the denominator is non-zero (which holds in typical scenarios where growth is finite), we get:
+\begin{equation}
+    F_k = \frac{S_p - p_k o_k S_o}{S_p + p_k o_k (1 - S_o)} \label{eq:Fk_formula}
+\end{equation}
+This formula gives the threshold $F$ below which outcome $k$ is no longer active, assuming the set $I$ (used to calculate $S_p, S_o$) was valid down to this threshold.
+
+\subsection{Algorithm for Finding Regions and Exits}
+
+Based on the above, we can use the following iterative algorithm:
+\begin{enumerate}
+    \item Initialize the active set $I = \{1, \dots, N\}$. Initialize $F_{high} = 1.0$. Initialize list of critical points `CP = []`.
+    \item While $|I| > 1$:
+        \begin{enumerate}
+            \item Identify $k = \argmin_{i \in I} \{p_i o_i\}$.
+            \item Calculate $S_p = \sum_{j \in I} p_j$ and $S_o = \sum_{j \in I} (1/o_j)$.
+            \item Calculate the exit threshold $F_k$ using equation \eqref{eq:Fk_formula}. Handle potential non-positive denominator or resulting $F_k \le 0$. Let $F_{k,bound} = \max(0, F_k)$ for range checks.
+            \item Store the critical point information: $(F_k, k, I_{current})$. Add to `CP`.
+            \item Check for interior maximum within the region $(F_{k,bound}, F_{high})$ (details in next subsection). If found, store it as the global optimum and mark as found.
+            \item Update $F_{high} = F_{k,bound}$.
+            \item Remove $k$ from $I$: $I \leftarrow I \setminus \{k\}$.
+        \end{enumerate}
+    \item Determine the Global Maximum (details in next subsection).
+    \item Post-process `CP`: For each stored point $(F_k, k, I_{before})$, calculate the optimal fractions $f_i(F_k)$ using \eqref{eq:fi_explicit} with set $I_{before}$ (setting $f_k=0$) and the log-growth $G(F_k)$ using \eqref{eq:objective}.
+\end{enumerate}
+
+\subsection{Finding the Global Maximum Growth Point \texorpdfstring{$F_{opt}$}{Fopt}}
+
+The overall expected log-growth $G(F)$ (maximized over $f_i$ for each $F$) is known to be a concave function of $F$. Therefore, it has a unique global maximum. This maximum occurs either at an interior point $F_{opt} \in (0, 1)$ or at the boundary $F_{opt}=1$.
+
+The interior maximum occurs where the marginal gain from increasing $F$ is balanced, corresponding to the condition $\lambda = 1$ in the constrained optimization framework. As derived from equation \eqref{eq:lambda_inv}:
+\begin{equation*}
+    \lambda = 1 \implies \frac{S_p}{F + (1 - F) S_o} = 1 \implies F = \frac{S_p - S_o}{1 - S_o} \quad (\text{if } S_o \neq 1)
+\end{equation*}
+Let $F_{potential\_opt}(I) = (S_p - S_o) / (1 - S_o)$, calculated using the sums for a given active set $I$.
+
+The algorithm incorporates this by checking in step 2(e): For the current active set $I$ defining a region $(F_k, F_{high})$, calculate $F_{pot} = F_{potential\_opt}(I)$. If $F_k < F_{pot} < F_high$, then $F_{opt} = F_{pot}$ is the unique interior global maximum. The algorithm stores this point and stops searching for other interior points.
+
+If the loop completes without finding such an interior point, the maximum must occur at the boundary $F=1$. In this case, $F_{opt}=1$, and the optimal fractions are simply $f_i(1) = p_i$.
+
+The algorithm calculates $G_{opt} = G(F_{opt})$ and the corresponding fractions $f_i(F_{opt})$ using the formulas \eqref{eq:objective} and \eqref{eq:fi_explicit} with the appropriate active set $I$ for $F_{opt}$.
+
+\section{Example Calculation}
+\label{sec:example}
+
+Let's apply the algorithm to the following 3-outcome example:
+\begin{itemize}
+    \item Outcome 0: $p_0=0.50$, $o_0=1.5$  $\implies p_0 o_0 = 0.75$
+    \item Outcome 1: $p_1=0.25$, $o_1=3.75$ $\implies p_1 o_1 = 0.9375$
+    \item Outcome 2: $p_2=0.25$, $o_2=6.0$  $\implies p_2 o_2 = 1.50$
+\end{itemize}
+
+\textbf{Iteration 1:}
+\begin{itemize}
+    \item Initial Active Set $I = \{0, 1, 2\}$. $F_{high} = 1.0$.
+    \item Minimum $p_k o_k$ is $p_0 o_0 = 0.75$ for $k=0$. Outcome 0 exits first.
+    \item Calculate sums for $I=\{0, 1, 2\}$:
+        \begin{itemize}
+            \item $S_p = p_0+p_1+p_2 = 0.5 + 0.25 + 0.25 = 1.0$
+            \item $S_o = 1/o_0 + 1/o_1 + 1/o_2 = 1/1.5 + 1/3.75 + 1/6.0 \approx 0.66667 + 0.26667 + 0.16667 = 1.10000$
+        \end{itemize}
+    \item Calculate $F_0$ (exit threshold for $k=0$):
+        \begin{align*}
+           F_0 &= \frac{S_p - p_0 o_0 S_o}{S_p + p_0 o_0 (1 - S_o)} = \frac{1.0 - (0.75)(1.10000)}{1.0 + (0.75)(1 - 1.10000)} \\
+               &= \frac{1.0 - 0.825}{1.0 + 0.75(-0.10)} = \frac{0.175}{1.0 - 0.075} = \frac{0.175}{0.925} \approx 0.189189
+        \end{align*}
+    \item Store Critical Point: $(F_k=0.189189, k=0, I=\{0, 1, 2\})$. $F_{k,bound}=0.189189$.
+    \item Check for interior max in $(F_k, F_{high}) \approx (0.189, 1.0)$:
+        \begin{itemize}
+            \item $F_{potential\_opt} = (S_p - S_o) / (1 - S_o) = (1.0 - 1.10) / (1 - 1.10) = (-0.10) / (-0.10) = 1.0$.
+            \item This value $1.0$ is not strictly within $(0.189, 1.0)$. No interior max found in this region.
+        \end{itemize}
+    \item Update $F_{high} = 0.189189$. Remove $k=0$. $I = \{1, 2\}$.
+\end{itemize}
+
+\textbf{Iteration 2:}
+\begin{itemize}
+    \item Current Active Set $I = \{1, 2\}$. $F_{high} \approx 0.189189$.
+    \item Minimum $p_k o_k$ in $I$ is $p_1 o_1 = 0.9375$ for $k=1$. Outcome 1 exits next.
+    \item Calculate sums for $I=\{1, 2\}$:
+        \begin{itemize}
+            \item $S_p = p_1+p_2 = 0.25 + 0.25 = 0.5$
+            \item $S_o = 1/o_1 + 1/o_2 = 1/3.75 + 1/6.0 \approx 0.26667 + 0.16667 = 0.43333$
+        \end{itemize}
+    \item Calculate $F_1$ (exit threshold for $k=1$):
+        \begin{align*}
+           F_1 &= \frac{S_p - p_1 o_1 S_o}{S_p + p_1 o_1 (1 - S_o)} = \frac{0.5 - (0.9375)(0.43333)}{0.5 + (0.9375)(1 - 0.43333)} \\
+               &= \frac{0.5 - 0.40625}{0.5 + 0.9375(0.56667)} = \frac{0.09375}{0.5 + 0.53125} = \frac{0.09375}{1.03125} \approx 0.090909
+        \end{align*}
+    \item Store Critical Point: $(F_k=0.090909, k=1, I=\{1, 2\})$. $F_{k,bound}=0.090909$.
+    \item Check for interior max in $(F_k, F_{high}) \approx (0.091, 0.189)$:
+        \begin{itemize}
+            \item $F_{potential\_opt} = (S_p - S_o) / (1 - S_o) = (0.5 - 0.43333) / (1 - 0.43333) = 0.06667 / 0.56667 \approx 0.117647$.
+            \item Check if $0.090909 < 0.117647 < 0.189189$. Yes, it is.
+            \item **Found Interior Global Maximum at $F_{opt} \approx 0.117647$**. Mark as found.
+        \end{itemize}
+    \item Update $F_{high} = 0.090909$. Remove $k=1$. $I = \{2\}$.
+\end{itemize}
+
+\textbf{End Loop:} $|I|=1$.
+
+\textbf{Determine Global Maximum:}
+The interior maximum was found during Iteration 2.
+$F_{opt} \approx 0.117647$. The active set for this region was $I = \{1, 2\}$.
+
+\textbf{Post-Processing (Calculate Fractions and Growth):}
+
+\emph{1. At Global Maximum $F_{opt} \approx 0.117647$ (Active Set $I=\{1, 2\}$):}
+\begin{itemize}
+    \item $S_p=0.5$, $S_o=0.43333$. $F=0.117647$.
+    \item $1/\lambda = (F + (1-F)S_o)/S_p = (0.117647 + (1-0.117647)0.43333)/0.5 = (0.117647 + 0.882353 \times 0.43333)/0.5 = (0.117647 + 0.38235)/0.5 = 0.5/0.5 = 1.0$.
+    \item $f_0(F_{opt}) = 0$ (not in $I$).
+    \item $f_1(F_{opt}) = p_1/\lambda - (1-F_{opt})/o_1 = 0.25/1.0 - (1-0.117647)/3.75 = 0.25 - 0.882353/3.75 = 0.25 - 0.23529 \approx 0.01471$.
+    \item $f_2(F_{opt}) = p_2/\lambda - (1-F_{opt})/o_2 = 0.25/1.0 - 0.882353/6.0 = 0.25 - 0.14706 \approx 0.10294$.
+    \item Fractions $f \approx [0.0000, 0.0147, 0.1029]$. (Sum $\approx 0.1176$).
+    \item $R_0 = 1 - F_{opt} \approx 0.88235$.
+    \item $R_1 = 1 - F_{opt} + f_1 o_1 \approx 0.88235 + 0.01471 \times 3.75 \approx 0.88235 + 0.05516 = 0.93751$.
+    \item $R_2 = 1 - F_{opt} + f_2 o_2 \approx 0.88235 + 0.10294 \times 6.0 \approx 0.88235 + 0.61764 = 1.50000$.
+    \item $G_{opt} = \sum p_k \ln(R_k) = 0.5 \ln(0.88235) + 0.25 \ln(0.93751) + 0.25 \ln(1.50000)$
+    \item $G_{opt} \approx 0.5(-0.12516) + 0.25(-0.06453) + 0.25(0.40547) \approx -0.06258 - 0.01613 + 0.10137 \approx 0.02266$.
+\end{itemize}
+
+\emph{2. At Critical Point $F_0 \approx 0.189189$ (k=0 exiting, Active Set $I=\{0, 1, 2\}$):}
+\begin{itemize}
+    \item Using $F=0.189189$ and $I=\{0, 1, 2\}$, calculate $f_i(F_0)$.
+    \item $1/\lambda = (F_0 + (1-F_0)S_o)/S_p = (0.189189 + (1-0.189189)1.10)/1.0 \approx 1.08108$.
+    \item $f_0(F_0) = p_0/\lambda - (1-F_0)/o_0 = 0.5(1.08108) - (1-0.189189)/1.5 \approx 0.54054 - 0.81081/1.5 \approx 0.54054 - 0.54054 = 0$.
+    \item $f_1(F_0) = p_1/\lambda - (1-F_0)/o_1 = 0.25(1.08108) - 0.81081/3.75 \approx 0.27027 - 0.21622 \approx 0.05405$.
+    \item $f_2(F_0) = p_2/\lambda - (1-F_0)/o_2 = 0.25(1.08108) - 0.81081/6.0 \approx 0.27027 - 0.13514 \approx 0.13514$.
+    \item Fractions $f \approx [0.0000, 0.0541, 0.1351]$. (Sum $\approx 0.1892$).
+    \item $R_0 = 1 - F_0 \approx 0.81081$.
+    \item $R_1 = 1 - F_0 + f_1 o_1 \approx 0.81081 + 0.05405 \times 3.75 \approx 0.81081 + 0.20269 = 1.01350$.
+    \item $R_2 = 1 - F_0 + f_2 o_2 \approx 0.81081 + 0.13514 \times 6.0 \approx 0.81081 + 0.81084 = 1.62165$.
+    \item $G(F_0) = 0.5 \ln(0.81081) + 0.25 \ln(1.01350) + 0.25 \ln(1.62165)$
+    \item $G(F_0) \approx 0.5(-0.20973) + 0.25(0.01341) + 0.25(0.48343) \approx -0.10487 + 0.00335 + 0.12086 \approx 0.01934$.
+\end{itemize}
+
+\emph{3. At Critical Point $F_1 \approx 0.090909$ (k=1 exiting, Active Set $I=\{1, 2\}$):}
+\begin{itemize}
+    \item Using $F=0.090909$ and $I=\{1, 2\}$, calculate $f_i(F_1)$.
+    \item $1/\lambda = (F_1 + (1-F_1)S_o)/S_p = (0.090909 + (1-0.090909)0.43333)/0.5 \approx 0.96970$.
+    \item $f_0(F_1) = 0$.
+    \item $f_1(F_1) = p_1/\lambda - (1-F_1)/o_1 = 0.25(0.96970) - (1-0.090909)/3.75 \approx 0.24242 - 0.90909/3.75 \approx 0.24242 - 0.24242 = 0$.
+    \item $f_2(F_1) = p_2/\lambda - (1-F_1)/o_2 = 0.25(0.96970) - 0.90909/6.0 \approx 0.24242 - 0.15152 \approx 0.09091$.
+    \item Fractions $f \approx [0.0000, 0.0000, 0.0909]$. (Sum $\approx 0.0909$).
+    \item $R_0 = 1 - F_1 \approx 0.90909$.
+    \item $R_1 = 1 - F_1 + f_1 o_1 \approx 0.90909$.
+    \item $R_2 = 1 - F_1 + f_2 o_2 \approx 0.90909 + 0.09091 \times 6.0 \approx 0.90909 + 0.54546 = 1.45455$.
+    \item $G(F_1) = 0.5 \ln(0.90909) + 0.25 \ln(0.90909) + 0.25 \ln(1.45455)$
+    \item $G(F_1) \approx 0.75(-0.09531) + 0.25(0.37469) \approx -0.07148 + 0.09367 \approx 0.02219$.
+\end{itemize}
+
+\textbf{Summary of Example Results:}
+
+\begin{table}[h!]
+\centering
+\caption{Critical Points and Exiting Outcomes}
+\label{tab:critical_points}
+\begin{tabular}{cccccc}
+\hline
+Exiting $k$ & $F_k$ & $G(F_k)$ & Active Set Before & Fractions $f(F_k)$ & $p_k o_k$ \\ \hline
+0 & 0.189189 & 0.01934 & \{0, 1, 2\} & [0.00, 0.05, 0.14] & 0.7500 \\
+1 & 0.090909 & 0.02219 & \{1, 2\}    & [0.00, 0.00, 0.09] & 0.9375 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Global Maximum Growth Point}
+\label{tab:global_max}
+\begin{tabular}{ccccc}
+\hline
+Source & $F_{opt}$ & $G_{opt}$ & Active Set & Fractions $f(F_{opt})$ \\ \hline
+Interior ($\lambda=1$) & 0.117647 & 0.02266 & \{1, 2\} & [0.00, 0.01, 0.10] \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This document analyzed the Kelly criterion for multiple mutually exclusive outcomes under the constraint that the total wagered fraction is fixed at $F$. Using KKT conditions, we derived the optimal betting fractions $f_i(F)$ for the active set of bets $I$ and demonstrated their linear dependence on $F$ within regions where $I$ is constant.
+
+An iterative algorithm was developed to precisely determine the critical fractions $F_k$ at which outcomes exit the portfolio, proving that outcomes with lower $p_k o_k$ products exit first. Crucially, we incorporated a method based on the Lagrange multiplier condition $\lambda=1$ to efficiently identify the total fraction $F_{opt}$ that yields the global maximum expected log-growth rate $G_{opt}$. This involves calculating $F_{potential\_opt} = (S_p - S_o) / (1 - S_o)$ for each region and checking if it falls within that region's bounds.
+
+The worked example illustrated the algorithm, showing the calculation of exit points, the optimal fractions and growth rates at these points, and the successful identification of an interior global maximum via the $\lambda=1$ condition. This analysis provides a comprehensive framework for understanding and applying the Kelly criterion under total wagering constraints. Future work could incorporate transaction costs or parameter uncertainty.
+
+\begin{thebibliography}{9}
+    \bibitem{Kelly1956}
+    J. L. Kelly, Jr., ``A New Interpretation of Information Rate,'' Bell System Technical Journal, 35(4):917--926, 1956.
+\end{thebibliography}
+
+\end{document}
