@@ -94,6 +94,7 @@ Using the following inputs:
 
 The script produces the following summarized output:
 
+```
 Calculating Kelly exit details for the example:
 Probabilities: [0.5, 0.25, 0.25]
 Odds: [1.5, 3.75, 6]
@@ -125,4 +126,4 @@ Exit k   | Exit F_k     | Log Growth G    | Optimal Fractions f_i at F_k
 1        | 0.090909     | 0.022191        | [0.0000, 0.0000, 0.0909]                
 --------------------------------------------------------------------------------
 Outcome 2 remains active until F approaches 0.
-
+```
