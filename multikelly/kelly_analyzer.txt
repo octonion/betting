@@ -1,31 +1,46 @@
-Calculating Kelly exit details for the example:
+Running Kelly Analysis at: 2025-04-12 07:28:39 EDT-0400
+
+Analyzing Kelly Regions for the example:
 Probabilities: [0.5, 0.25, 0.25]
-Odds: [1.5, 3.75, 6]
+Odds: [1.5, 3.75, 6.0]
 --------------------------------------------------
 
---- Calculation Steps ---
+--- Iteratively Finding Exit Points and Checking Regions for Max Growth ---
 
-Iteration 1: Active Set = [0, 1, 2]
-  Min p*o = 0.7500 triggers exit for outcome k = 0
-  Calculated Exit Threshold F_0 = 0.189189
-  Optimal Fractions at F_0: ['0.0000', '0.0541', '0.1351']
-  Expected Log Growth G at F_0: 0.019352
+Iteration 1: Analyzing region F > F_k (where F_k is exit point of outcome below)
+  Current Active Set I = [0, 1, 2]
+  Min p*o = 0.7500 found for outcome k = 0 (Next to exit)
+  S_p = 1.000000, S_o = 1.100000
+  Region Check: Potential Max F from lambda=1 condition = 1.000000
+  Calculated exit threshold F_0 = 0.189189 (Lower bound for current set's validity)
+  Region Check: Potential Max F is outside the valid range (0.1892, 1.0000).
 
-Iteration 2: Active Set = [1, 2]
-  Min p*o = 0.9375 triggers exit for outcome k = 1
-  Calculated Exit Threshold F_1 = 0.090909
-  Optimal Fractions at F_1: ['0.0000', '0.0000', '0.0909']
-  Expected Log Growth G at F_1: 0.022191
+Iteration 2: Analyzing region F > F_k (where F_k is exit point of outcome below)
+  Current Active Set I = [1, 2]
+  Min p*o = 0.9375 found for outcome k = 1 (Next to exit)
+  S_p = 0.500000, S_o = 0.433333
+  Region Check: Potential Max F from lambda=1 condition = 0.117647
+  Calculated exit threshold F_1 = 0.090909 (Lower bound for current set's validity)
+  !!! Found Valid Interior Max Candidate at F_opt = 0.117647 in region (0.0909, 0.1892) !!!
+      --> Confirmed Global Max G = 0.022650
 
---- Calculation Complete ---
+--- Finished Iterations ---
 
---- Results: Exit Points, Fractions, and Log Growth ---
-(Sorted by F_k descending: Earlier exits appear first)
-(Fractions & Growth are calculated AT the moment outcome 'k' exits)
+
+--- FINAL ANALYSIS RESULTS ---
+
+1. Critical Points (Order of Exit):
 --------------------------------------------------------------------------------
-Exit k   | Exit F_k     | Log Growth G    | Optimal Fractions f_i at F_k            
+Exiting k  | Exit F_k     | G at F_k     | Active Set Before    | Fractions f_i at F_k
 --------------------------------------------------------------------------------
-0        | 0.189189     | 0.019352        | [0.0000, 0.0541, 0.1351]                
-1        | 0.090909     | 0.022191        | [0.0000, 0.0000, 0.0909]                
+0          | 0.189189     | 0.019352     | [0, 1, 2]            | 0.0000, 0.0541, 0.1351
+1          | 0.090909     | 0.022191     | [1, 2]               | 0.0000, 0.0000, 0.0909
 --------------------------------------------------------------------------------
-Outcome 2 remains active until F approaches 0.
+
+2. Global Maximum Growth Point:
+  Source: Interior optimum based on lambda=1 in region F > 0.0909
+  Max Growth occurs at F_opt = 0.117647
+    Active Set at F_opt: [1, 2]
+    Optimal Fractions f_i at F_opt:
+      [0.0000, 0.0147, 0.1029]
+    Maximum Expected Log Growth G_opt = 0.022650
