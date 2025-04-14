@@ -1,0 +1,45 @@
+Script started at: 2025-04-14 01:34:52 UTC+0000
+
+============================================================
+Running Global Optimization (F_total <= 1)
+============================================================
+
+--- Running Optimization (Global F <= 1) ---
+Number of games: 3
+Outcomes per game: [2, 3, 2]
+Total individual bet variables: 7
+Total joint outcomes for objective: 12
+Solving optimization problem using SCS...
+Solver Status: optimal
+Optimization duration: 0:00:00.024134
+
+--- Global Optimization Results ---
+Status: optimal
+Optimal Total Fraction (F_opt): 1.000000
+Maximum Expected Log Growth (G_opt): 0.092320
+Optimal Fractions per Game:
+  Game 0: [0.0707, 0.0000]
+  Game 1: [0.0000, 0.0173, 0.0919]
+  Game 2: [0.7415, 0.0787]
+
+============================================================
+Running Fixed F Optimization (F_total = 0.5)
+============================================================
+
+--- Running Optimization (Fixed F = 0.5) ---
+Number of games: 3
+Outcomes per game: [2, 3, 2]
+Total individual bet variables: 7
+Total joint outcomes for objective: 12
+Solving optimization problem using SCS...
+Solver Status: optimal
+Optimization duration: 0:00:00.020980
+
+--- Fixed F=0.5 Optimization Results ---
+Status: optimal
+Specified Total Fraction (F_total): 0.500000
+Maximum Expected Log Growth (G): 0.080212
+Optimal Fractions per Game:
+  Game 0: [0.0699, 0.0000]
+  Game 1: [0.0000, 0.0172, 0.0907]
+  Game 2: [0.2972, 0.0250]
