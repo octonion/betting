@@ -1,0 +1,400 @@
+
+========================= Kelly Analyzer Library Example Usage =========================
+    Timestamp: 2025-04-15 22:45:26 EDT-0400
+----------------------------------------------------------------------
+
+==================== SINGLE GAME TESTS ====================
+
+--- Test 1: Single Game 1 (No Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using KKT solver for global optimum...
+>>> Kelly Optimization Finished: Status = Optimal <<<
+
+--- Test 1a: KKT Results ---
+ Status: Optimal, Solver: KKT, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.012824
+ Optimal Fractions per Game:
+   Game 0: [0.6000, 0.4000] (Sum: 1.0000)
+ Duration: 0.0004 seconds
+----------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 1b: CVXPY(SCS) Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.012824
+ Optimal Fractions per Game:
+   Game 0: [0.6000, 0.4000] (Sum: 1.0000)
+ Duration: 0.0081 seconds
+-----------------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using ECOS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 1c: CVXPY(ECOS) Results ---
+ Status: optimal, Solver: ECOS, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.012824
+ Optimal Fractions per Game:
+   Game 0: [0.6000, 0.4000] (Sum: 1.0000)
+ Duration: 0.0054 seconds
+------------------------------------
+
+--- Test 2: Single Game 1 (No Bonus), Fractional k=0.5 ---
+
+>>> Running Kelly Optimization <<<
+    Mode: fractional, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Fractional Mode: Step 1 - Finding global optimum using KKT...
+ Fractional Mode: Global F_opt = 1.000000, Global G_opt = 0.012824 (Status: Optimal, Solver: KKT)
+ Fractional Mode: Step 2 - Target F = 0.500 * 1.0000 = 0.500000
+ Fractional Mode: Step 3 - Re-solving using CVXPY for fixed F = 0.500000...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 2a: KKT (Global) + CVXPY (Fixed) Results ---
+ Status: optimal, Solver: SCS, Mode: fractional
+ Optimal Total F: 0.500000
+ Max Log Growth (G): 0.007981
+ Optimal Fractions per Game:
+   Game 0: [0.3193, 0.1807] (Sum: 0.5000)
+ Fractional Mode Base Global Opt:
+   F_opt=1.0000, G_opt=0.0128, Status=Optimal, Solver=KKT
+ Duration: 0.0052 seconds
+-----------------------------------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: fractional, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Fractional Mode: Step 1 - Finding global optimum using CVXPY...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+ Fractional Mode: Global F_opt = 1.000000, Global G_opt = 0.012824 (Status: optimal, Solver: SCS)
+ Fractional Mode: Step 2 - Target F = 0.500 * 1.0000 = 0.500000
+ Fractional Mode: Step 3 - Re-solving using CVXPY for fixed F = 0.500000...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 2b: CVXPY Only Results ---
+ Status: optimal, Solver: SCS, Mode: fractional
+ Optimal Total F: 0.500000
+ Max Log Growth (G): 0.007981
+ Optimal Fractions per Game:
+   Game 0: [0.3193, 0.1807] (Sum: 0.5000)
+ Fractional Mode Base Global Opt:
+   F_opt=1.0000, G_opt=0.0128, Status=optimal, Solver=SCS
+ Duration: 0.0100 seconds
+-----------------------------------
+
+--- Test 3: Single Game 1 (No Bonus), Fixed F=0.05 ---
+
+>>> Running Kelly Optimization <<<
+    Mode: fixed_f, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for fixed F = 0.050000...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+ Warning: CVXPY optimal sum 0.050001 differs significantly from requested F=0.050000. Scaling...
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 3: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: fixed_f
+ Optimal Total F: 0.050000
+ Max Log Growth (G): 0.003016
+ Optimal Fractions per Game:
+   Game 0: [0.0500, 0.0000] (Sum: 0.0500)
+ Duration: 0.0049 seconds
+-----------------------------
+
+--- Test 4: Single Game 2 (With Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+Warning: KKT solver requested but ineligible (multiple games or bonuses). Using CVXPY instead.
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 4a: CVXPY (KKT Ignored) Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 0.127941
+ Max Log Growth (G): 0.066667
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0287, 0.0992] (Sum: 0.1279)
+ Duration: 0.0068 seconds
+--------------------------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 4b: CVXPY (KKT False) Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 0.127941
+ Max Log Growth (G): 0.066667
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0287, 0.0992] (Sum: 0.1279)
+ Duration: 0.0067 seconds
+------------------------------------------
+
+--- Test 5: Single Game 4 (Suboptimal), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using KKT solver for global optimum...
+>>> Kelly Optimization Finished: Status = Optimal_F_Zero <<<
+
+--- Test 5a: KKT Results ---
+ Status: Optimal_F_Zero, Solver: KKT, Mode: global
+ Optimal Total F: 0.000000
+ Max Log Growth (G): 0.000000
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+ Duration: 0.0001 seconds
+----------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+ CVXPY Solver: Max Log Growth is non-positive or zero. Optimal F=0.
+>>> Kelly Optimization Finished: Status = Optimal_F_Zero <<<
+
+--- Test 5b: CVXPY Results ---
+ Status: Optimal_F_Zero, Solver: SCS, Mode: global
+ Optimal Total F: 0.000000
+ Max Log Growth (G): 0.000000
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+ Duration: 0.0051 seconds
+------------------------------
+
+--- Test 6: Single Game 5 (No Bonus, 3 outcomes), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using KKT solver for global optimum...
+>>> Kelly Optimization Finished: Status = Optimal <<<
+
+--- Test 6a: KKT Results ---
+ Status: Optimal, Solver: KKT, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.062211
+ Optimal Fractions per Game:
+   Game 0: [0.4000, 0.3500, 0.2500] (Sum: 1.0000)
+ Duration: 0.0003 seconds
+----------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 6b: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.062211
+ Optimal Fractions per Game:
+   Game 0: [0.4000, 0.3500, 0.2500] (Sum: 1.0000)
+ Duration: 0.0065 seconds
+------------------------------
+
+--- Test 7': Single Game 5 (No Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: True, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using KKT solver for global optimum...
+>>> Kelly Optimization Finished: Status = Optimal <<<
+
+--- Test 1a: KKT Results ---
+ Status: Optimal, Solver: KKT, Mode: global
+ Optimal Total F: 0.117647
+ Max Log Growth (G): 0.022650
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0147, 0.1029] (Sum: 0.1176)
+ Duration: 0.0002 seconds
+----------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 1b: CVXPY(SCS) Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 0.117647
+ Max Log Growth (G): 0.022650
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0147, 0.1029] (Sum: 0.1176)
+ Duration: 0.0066 seconds
+-----------------------------------
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using CLARABEL...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 7c: CVXPY(CLARABEL) Results ---
+ Status: optimal, Solver: CLARABEL, Mode: global
+ Optimal Total F: 0.117650
+ Max Log Growth (G): 0.022650
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0147, 0.1029] (Sum: 0.1176)
+ Duration: 0.0067 seconds
+----------------------------------------
+
+==================== MULTI-GAME TESTS (CVXPY ONLY) ====================
+
+--- Test 7: Multi-Game (2 Games, No Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 7: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.048790
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+   Game 1: [0.7000, 0.3000] (Sum: 1.0000)
+ Duration: 0.0093 seconds
+-----------------------------
+
+--- Test 8: Multi-Game (2 Games, With Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 8: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000000
+ Max Log Growth (G): 0.043087
+ Optimal Fractions per Game:
+   Game 0: [0.0092, 0.0000] (Sum: 0.0092)
+   Game 1: [0.2959, 0.6950] (Sum: 0.9908)
+ Duration: 0.0092 seconds
+-----------------------------
+
+--- Test 9: Multi-Game (3 Games, No Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 9: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000001
+ Max Log Growth (G): 0.053409
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+   Game 1: [0.6646, 0.2848] (Sum: 0.9494)
+   Game 2: [0.0506, 0.0000] (Sum: 0.0506)
+ Duration: 0.0185 seconds
+-----------------------------
+
+--- Test 10: Multi-Game (3 Games, With Bonus), Fractional k=0.7 ---
+
+>>> Running Kelly Optimization <<<
+    Mode: fractional, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Fractional Mode: Step 1 - Finding global optimum using CVXPY...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+ Fractional Mode: Global F_opt = 1.000000, Global G_opt = 0.048315 (Status: optimal, Solver: SCS)
+ Fractional Mode: Step 2 - Target F = 0.700 * 1.0000 = 0.700000
+ Fractional Mode: Step 3 - Re-solving using CVXPY for fixed F = 0.700000...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 10: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: fractional
+ Optimal Total F: 0.700000
+ Max Log Growth (G): 0.037570
+ Optimal Fractions per Game:
+   Game 0: [0.0090, 0.0000] (Sum: 0.0090)
+   Game 1: [0.2036, 0.4345] (Sum: 0.6381)
+   Game 2: [0.0529, 0.0000] (Sum: 0.0529)
+ Fractional Mode Base Global Opt:
+   F_opt=1.0000, G_opt=0.0483, Status=optimal, Solver=SCS
+ Duration: 0.0353 seconds
+------------------------------
+
+--- Test 11: Multi-Game (4 Games, With Bonus), Fixed F=0.4 ---
+
+>>> Running Kelly Optimization <<<
+    Mode: fixed_f, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for fixed F = 0.400000...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 11: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: fixed_f
+ Optimal Total F: 0.400000
+ Max Log Growth (G): 0.030495
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+   Game 1: [0.2130, 0.0913] (Sum: 0.3043)
+   Game 2: [0.0466, 0.0000] (Sum: 0.0466)
+   Game 3: [0.0490, 0.0000] (Sum: 0.0490)
+ Duration: 0.0359 seconds
+------------------------------
+
+--- Test 12: Multi-Game (6 Games, With Bonus), Global ---
+
+>>> Running Kelly Optimization <<<
+    Mode: global, Use KKT: False, Timestamp: 2025-04-15 22:45:26 EDT-0400
+ Using CVXPY solver for global optimum (F<=1)...
+ Solving CVXPY problem using SCS...
+ CVXPY Solver Status: optimal
+>>> Kelly Optimization Finished: Status = optimal <<<
+
+--- Test 12: CVXPY Results ---
+ Status: optimal, Solver: SCS, Mode: global
+ Optimal Total F: 1.000004
+ Max Log Growth (G): 0.059407
+ Optimal Fractions per Game:
+   Game 0: [0.0000, 0.0000] (Sum: 0.0000)
+   Game 1: [0.6310, 0.2704] (Sum: 0.9015)
+   Game 2: [0.0481, 0.0000] (Sum: 0.0481)
+   Game 3: [0.0505, 0.0000] (Sum: 0.0505)
+   Game 4: [0.0000, 0.0000] (Sum: 0.0000)
+   Game 5: [0.0000, 0.0000] (Sum: 0.0000)
+ Duration: 0.2009 seconds
+------------------------------
+
+========================= End Example Usage =========================
