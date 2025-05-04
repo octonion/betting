@@ -1,0 +1,596 @@
+Reading examples from: betting_examples.txt
+
+--- Running Example 1 (n=2) ---
+Parameters: [(0.9, 1.5, 0.1), (0.1, 5.0, 0.5)]
+
+Starting trace for params: [(0.9, 1.5, 0.1), (0.1, 5.0, 0.5)]...
+Initial state (F=1.0): Active Set S* = {0, 1}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1}, T(1, S*(1))=0.1143. Predict F*=1? Yes
+  F in (0.0000, 0.9219]: Active Set = {0}
+  F in (0.9219, 1.0000]: Active Set = {0, 1}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (2 points):
+    F=0.9209: Analytic(S={0}, E=0.3458) != CVXPY(S={0, 1}, E=0.3458) (Potential Mismatch)
+    F=0.9219: Analytic(S={0}, E=0.3460) != CVXPY(S={0, 1}, E=0.3460) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 1.000000
+  Optimal Fractions f*: [0.98333, 0.01667]
+  Maximum E[log W]*: 0.354930
+  Optimal Active Set S*: {0, 1}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=1 matches CVXPY F* (~1.0).
+
+--- End of Example 1 ---
+
+--- Running Example 2 (n=2) ---
+Parameters: [(0.6, 2.0, 0.0), (0.4, 2.2, 0.0)]
+
+Starting trace for params: [(0.6, 2.0, 0.0), (0.4, 2.2, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1}, T(1, S*(1))=0.0455. Predict F*=1? Yes
+  F in (0.0000, 0.1538]: Active Set = {0}
+  F in (0.1538, 1.0000]: Active Set = {0, 1}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (2 points):
+    F=0.1528: Analytic(S={0}, E=0.0190) != CVXPY(S={0, 1}, E=0.0190) (Potential Mismatch)
+    F=0.1538: Analytic(S={0}, E=0.0190) != CVXPY(S={0, 1}, E=0.0190) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 1.000000
+  Optimal Fractions f*: [0.6, 0.4]
+  Maximum E[log W]*: 0.058260
+  Optimal Active Set S*: {0, 1}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=1 matches CVXPY F* (~1.0).
+
+--- End of Example 2 ---
+
+--- Running Example 3 (n=2) ---
+Parameters: [(0.5, 2.0, 0.0), (0.5, 2.0, 0.0)]
+
+Starting trace for params: [(0.5, 2.0, 0.0), (0.5, 2.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1}, T(1, S*(1))=0.0000. Predict F*=1? Yes
+  F in (0.0000, 1.0000]: Active Set = {0, 1}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison: All tested points OK.
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.667466
+  Optimal Fractions f*: [0.33373, 0.33373]
+  Maximum E[log W]*: -0.000000
+  Optimal Active Set S*: {0, 1}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.667466) falls within predicted flat region (0.0000, 1.0000] for S={0, 1}.
+
+--- End of Example 3 ---
+
+--- Running Example 4 (n=2) ---
+Parameters: [(0.7, 2.5, 0.0), (0.3, 3.0, 0.2)]
+
+Starting trace for params: [(0.7, 2.5, 0.0), (0.3, 3.0, 0.2)]...
+Initial state (F=1.0): Active Set S* = {0, 1}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1}, T(1, S*(1))=0.2500. Predict F*=1? Yes
+  F in (0.0000, 0.3871]: Active Set = {0}
+  F in (0.3871, 1.0000]: Active Set = {0, 1}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (2 points):
+    F=0.3861: Analytic(S={0}, E=0.2580) != CVXPY(S={0, 1}, E=0.2580) (Potential Mismatch)
+    F=0.3871: Analytic(S={0}, E=0.2583) != CVXPY(S={0, 1}, E=0.2583) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 1.000000
+  Optimal Fractions f*: [0.74667, 0.25333]
+  Maximum E[log W]*: 0.424661
+  Optimal Active Set S*: {0, 1}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=1 matches CVXPY F* (~1.0).
+
+--- End of Example 4 ---
+
+--- Running Example 5 (n=2) ---
+Parameters: [(0.05, 20.0, 0.1), (0.95, 1.05, 0.0)]
+
+Starting trace for params: [(0.05, 20.0, 0.1), (0.95, 1.05, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1}, T(1, S*(1))=-0.0024. Predict F*=1? No
+  F in (0.0000, 0.0928]: Active Set = {1} (T(0.093)=-2.36e-03, T(0.000)=2.05e-03 => Contains interior F*? Yes)
+  F in (0.0928, 1.0000]: Active Set = {0, 1} (T(1.000)=-2.37e-03, T(0.093)=-2.36e-03 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (3 points):
+    F=0.0918: Analytic(S={1}, E=0.0048) != CVXPY(S={0, 1}, E=0.0048) (Potential Mismatch)
+    F=0.0928: Analytic(S={1}, E=0.0048) != CVXPY(S={0, 1}, E=0.0048) (Boundary Discrepancy)
+    F=0.0938: Analytic(S={0, 1}, E=0.0048) != CVXPY(S={0, 1}, E=0.0048) (Potential Mismatch)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.045000
+  Optimal Fractions f*: [0.0, 0.045]
+  Maximum E[log W]*: 0.004812
+  Optimal Active Set S*: {1}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.045000) is within predicted interval (0.0000, 0.0928].
+
+--- End of Example 5 ---
+
+--- Running Example 6 (n=3) ---
+Parameters: [(0.5, 2.0, 0.0), (0.3, 3.0, 0.0), (0.2, 4.0, 0.0)]
+
+Starting trace for params: [(0.5, 2.0, 0.0), (0.3, 3.0, 0.0), (0.2, 4.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2}, T(1, S*(1))=-0.0833. Predict F*=1? No
+  F in (0.0000, 0.0526]: Active Set = {0} (T(0.053)=-5.28e-02, T(0.000)=-1.00e-07 => Contains interior F*? No)
+  F in (0.0526, 0.1429]: Active Set = {0, 1} (T(0.143)=-7.78e-02, T(0.053)=-5.28e-02 => Contains interior F*? No)
+  F in (0.1429, 1.0000]: Active Set = {0, 1, 2} (T(1.000)=-8.33e-02, T(0.143)=-7.78e-02 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (3 points):
+    F=0.0526: Analytic(S={0}, E=-0.0014) != CVXPY(S={0, 1}, E=-0.0014) (Boundary Discrepancy)
+    F=0.1419: Analytic(S={0, 1}, E=-0.0072) != CVXPY(S={0, 1, 2}, E=-0.0072) (Potential Mismatch)
+    F=0.1429: Analytic(S={0, 1}, E=-0.0072) != CVXPY(S={0, 1, 2}, E=-0.0072) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000012
+  Optimal Fractions f*: [1e-05, 0.0, 0.0]
+  Maximum E[log W]*: -0.000000
+  Optimal Active Set S*: {0}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    Note: E[logW] matches, but predicted F*=0 while CVXPY F* = 0.000012.
+
+--- End of Example 6 ---
+
+--- Running Example 7 (n=3) ---
+Parameters: [(0.4, 2.5, 0.0), (0.4, 2.5, 0.15), (0.2, 5.0, 0.0)]
+
+Starting trace for params: [(0.4, 2.5, 0.0), (0.4, 2.5, 0.15), (0.2, 5.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2}, T(1, S*(1))=0.0000. Predict F*=1? Yes
+  F in (0.0000, 0.0900]: Active Set = {0, 2}
+  F in (0.0900, 1.0000]: Active Set = {0, 1, 2}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (2 points):
+    F=0.0890: Analytic(S={0, 2}, E=0.0583) != CVXPY(S={0, 1, 2}, E=0.0583) (Potential Mismatch)
+    F=0.0900: Analytic(S={0, 2}, E=0.0583) != CVXPY(S={0, 1, 2}, E=0.0583) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.738344
+  Optimal Fractions f*: [0.31934, 0.25934, 0.15967]
+  Maximum E[log W]*: 0.058269
+  Optimal Active Set S*: {0, 1, 2}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.738344) falls within predicted flat region (0.0900, 1.0000] for S={0, 1, 2}.
+
+--- End of Example 7 ---
+
+--- Running Example 8 (n=3) ---
+Parameters: [(0.6, 1.8, 0.05), (0.3, 3.5, 0.1), (0.1, 10.0, 0.2)]
+
+Starting trace for params: [(0.6, 1.8, 0.05), (0.3, 3.5, 0.1), (0.1, 10.0, 0.2)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2}, T(1, S*(1))=0.0546. Predict F*=1? Yes
+  F in (0.0000, 0.0445]: Active Set = {0}
+  F in (0.0445, 0.1723]: Active Set = {0, 1}
+  F in (0.1723, 1.0000]: Active Set = {0, 1, 2}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (4 points):
+    F=0.0435: Analytic(S={0}, E=0.0799) != CVXPY(S={0, 1}, E=0.0799) (Potential Mismatch)
+    F=0.0445: Analytic(S={0}, E=0.0799) != CVXPY(S={0, 1}, E=0.0799) (Boundary Discrepancy)
+    F=0.1713: Analytic(S={0, 1}, E=0.0881) != CVXPY(S={0, 1, 2}, E=0.0881) (Potential Mismatch)
+    F=0.1723: Analytic(S={0, 1}, E=0.0882) != CVXPY(S={0, 1, 2}, E=0.0882) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 1.000000
+  Optimal Fractions f*: [0.61803, 0.29433, 0.08763]
+  Maximum E[log W]*: 0.134389
+  Optimal Active Set S*: {0, 1, 2}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=1 matches CVXPY F* (~1.0).
+
+--- End of Example 8 ---
+
+--- Running Example 9 (n=3) ---
+Parameters: [(0.333, 3.0, 0.01), (0.333, 3.0, 0.01), (0.334, 3.0, 0.01)]
+
+Starting trace for params: [(0.333, 3.0, 0.01), (0.333, 3.0, 0.01), (0.334, 3.0, 0.01)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2}, T(1, S*(1))=0.0000. Predict F*=1? Yes
+  F in (0.0000, 0.0010]: Active Set = {2}
+  F in (0.0010, 1.0000]: Active Set = {0, 1, 2}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (1 points):
+    F=0.0010: Analytic(S={2}, E=0.0100) != CVXPY(S={0, 1, 2}, E=0.0100) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.748629
+  Optimal Fractions f*: [0.24921, 0.24921, 0.25022]
+  Maximum E[log W]*: 0.009951
+  Optimal Active Set S*: {0, 1, 2}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.748629) falls within predicted flat region (0.0010, 1.0000] for S={0, 1, 2}.
+
+--- End of Example 9 ---
+
+--- Running Example 10 (n=3) ---
+Parameters: [(0.8, 1.5, 0.1), (0.15, 4.0, 0.0), (0.05, 12.0, 0.3)]
+
+Starting trace for params: [(0.8, 1.5, 0.1), (0.15, 4.0, 0.0), (0.05, 12.0, 0.3)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2}, T(1, S*(1))=0.0000. Predict F*=1? Yes
+  F in (0.0000, 0.3600]: Active Set = {0}
+  F in (0.3600, 0.6450]: Active Set = {0, 1}
+  F in (0.6450, 1.0000]: Active Set = {0, 1, 2}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (4 points):
+    F=0.3590: Analytic(S={0}, E=0.1274) != CVXPY(S={0, 1}, E=0.1274) (Potential Mismatch)
+    F=0.3600: Analytic(S={0}, E=0.1275) != CVXPY(S={0, 1}, E=0.1275) (Boundary Discrepancy)
+    F=0.6440: Analytic(S={0, 1}, E=0.1314) != CVXPY(S={0, 1, 2}, E=0.1314) (Potential Mismatch)
+    F=0.6450: Analytic(S={0, 1}, E=0.1314) != CVXPY(S={0, 1, 2}, E=0.1314) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.855331
+  Optimal Fractions f*: [0.71022, 0.12758, 0.01753]
+  Maximum E[log W]*: 0.131398
+  Optimal Active Set S*: {0, 1, 2}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.855331) falls within predicted flat region (0.6450, 1.0000] for S={0, 1, 2}.
+
+--- End of Example 10 ---
+
+--- Running Example 11 (n=5) ---
+Parameters: [(0.3, 3.0, 0.0), (0.25, 4.0, 0.0), (0.2, 5.0, 0.0), (0.15, 6.0, 0.0), (0.1, 7.0, 0.0)]
+
+Starting trace for params: [(0.3, 3.0, 0.0), (0.25, 4.0, 0.0), (0.2, 5.0, 0.0), (0.15, 6.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4}, T(1, S*(1))=-0.0929. Predict F*=1? No
+  F in (0.0000, 0.0476]: Active Set = {1, 2} (T(0.048)=-5.78e-02, T(0.000)=-1.22e-07 => Contains interior F*? No)
+  F in (0.0476, 0.2513]: Active Set = {0, 1, 2, 3} (T(0.251)=-8.68e-02, T(0.048)=-5.78e-02 => Contains interior F*? No)
+  F in (0.2513, 1.0000]: Active Set = {0, 1, 2, 3, 4} (T(1.000)=-9.29e-02, T(0.251)=-8.68e-02 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (3 points):
+    F=0.0476: Analytic(S={1, 2}, E=-0.0014) != CVXPY(S={0, 1, 2, 3}, E=-0.0014) (Boundary Discrepancy)
+    F=0.2500: Analytic(S={0, 1, 2, 3}, E=-0.0158) != CVXPY(S={0, 1, 2, 3, 4}, E=-0.0158) (Potential Mismatch)
+    F=0.2513: Analytic(S={0, 1, 2, 3}, E=-0.0159) != CVXPY(S={0, 1, 2, 3, 4}, E=-0.0159) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000015
+  Optimal Fractions f*: [0.0, 1e-05, 1e-05, 0.0, 0.0]
+  Maximum E[log W]*: -0.000000
+  Optimal Active Set S*: {1, 2}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    Note: E[logW] matches, but predicted F*=0 while CVXPY F* = 0.000015.
+
+--- End of Example 11 ---
+
+--- Running Example 12 (n=5) ---
+Parameters: [(0.4, 2.0, 0.05), (0.2, 3.0, 0.0), (0.2, 4.0, 0.1), (0.1, 6.0, 0.0), (0.1, 8.0, 0.2)]
+
+Starting trace for params: [(0.4, 2.0, 0.05), (0.2, 3.0, 0.0), (0.2, 4.0, 0.1), (0.1, 6.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4}, T(1, S*(1))=-0.3488. Predict F*=1? No
+  F in (0.0000, 0.0250]: Active Set = {0} (T(0.025)=-2.07e-01, T(0.000)=-1.84e-01 => Contains interior F*? No)
+  F in (0.0250, 0.1000]: Active Set = {0, 2} (T(0.100)=-2.42e-01, T(0.025)=-2.07e-01 => Contains interior F*? No)
+  F in (0.1000, 0.1677]: Active Set = {0, 2, 4} (T(0.168)=-2.70e-01, T(0.100)=-2.42e-01 => Contains interior F*? No)
+  F in (0.1677, 1.0000]: Active Set = {0, 1, 2, 3, 4} (T(1.000)=-3.49e-01, T(0.168)=-2.70e-01 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (4 points):
+    F=0.0250: Analytic(S={0}, E=0.0519) != CVXPY(S={0, 2}, E=0.0519) (Boundary Discrepancy)
+    F=0.1000: Analytic(S={0, 2}, E=0.0351) != CVXPY(S={0, 2, 4}, E=0.0351) (Boundary Discrepancy)
+    F=0.1667: Analytic(S={0, 2, 4}, E=0.0180) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0180) (Potential Mismatch)
+    F=0.1677: Analytic(S={0, 2, 4}, E=0.0178) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0178) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000000
+  Optimal Fractions f*: [0.0, 0.0, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.056810
+  Optimal Active Set S*: set()
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=0 matches CVXPY F* (~0.0).
+
+--- End of Example 12 ---
+
+--- Running Example 13 (n=5) ---
+Parameters: [(0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.6, 1.6, 0.1)]
+
+Starting trace for params: [(0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4}, T(1, S*(1))=-0.0235. Predict F*=1? No
+  F in (0.0000, 0.0574]: Active Set = {0, 1, 2, 3} (T(0.057)=-2.30e-02, T(0.000)=5.45e-02 => Contains interior F*? Yes)
+  F in (0.0574, 1.0000]: Active Set = {0, 1, 2, 3, 4} (T(1.000)=-2.35e-02, T(0.057)=-2.30e-02 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (1 points):
+    F=0.0574: Analytic(S={0, 1, 2, 3}, E=0.0581) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0581) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.040000
+  Optimal Fractions f*: [0.01, 0.01, 0.01, 0.01, 0.0]
+  Maximum E[log W]*: 0.058269
+  Optimal Active Set S*: {0, 1, 2, 3}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.040000) is within predicted interval (0.0000, 0.0574].
+
+--- End of Example 13 ---
+
+--- Running Example 14 (n=5) ---
+Parameters: [(0.2, 3.0, 0.1), (0.2, 3.5, 0.1), (0.2, 4.0, 0.1), (0.2, 4.5, 0.1), (0.2, 5.0, 0.1)]
+
+Starting trace for params: [(0.2, 3.0, 0.1), (0.2, 3.5, 0.1), (0.2, 4.0, 0.1), (0.2, 4.5, 0.1)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4}, T(1, S*(1))=-0.2580. Predict F*=1? No
+  F in (0.0000, 0.0239]: Active Set = {4} (T(0.024)=-7.43e-02, T(0.000)=-3.31e-07 => Contains interior F*? No)
+  F in (0.0239, 0.0794]: Active Set = {3, 4} (T(0.079)=-1.35e-01, T(0.024)=-7.43e-02 => Contains interior F*? No)
+  F in (0.0794, 0.1717]: Active Set = {2, 3, 4} (T(0.172)=-1.84e-01, T(0.079)=-1.35e-01 => Contains interior F*? No)
+  F in (0.1717, 0.3002]: Active Set = {1, 2, 3, 4} (T(0.300)=-2.19e-01, T(0.172)=-1.84e-01 => Contains interior F*? No)
+  F in (0.3002, 1.0000]: Active Set = {0, 1, 2, 3, 4} (T(1.000)=-2.58e-01, T(0.300)=-2.19e-01 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (5 points):
+    F=0.0239: Analytic(S={4}, E=0.0944) != CVXPY(S={3, 4}, E=0.0944) (Boundary Discrepancy)
+    F=0.0794: Analytic(S={3, 4}, E=0.0886) != CVXPY(S={2, 3, 4}, E=0.0886) (Boundary Discrepancy)
+    F=0.1717: Analytic(S={2, 3, 4}, E=0.0739) != CVXPY(S={1, 2, 3, 4}, E=0.0739) (Boundary Discrepancy)
+    F=0.2992: Analytic(S={1, 2, 3, 4}, E=0.0484) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0484) (Potential Mismatch)
+    F=0.3002: Analytic(S={1, 2, 3, 4}, E=0.0482) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0482) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000003
+  Optimal Fractions f*: [0.0, 0.0, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.095310
+  Optimal Active Set S*: {4}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=0 matches CVXPY F* (~0.0).
+
+--- End of Example 14 ---
+
+--- Running Example 15 (n=5) ---
+Parameters: [(0.9, 1.2, 0.02), (0.025, 10.0, 0.0), (0.025, 15.0, 0.1), (0.025, 20.0, 0.0), (0.025, 25.0, 0.2)]
+
+Starting trace for params: [(0.9, 1.2, 0.02), (0.025, 10.0, 0.0), (0.025, 15.0, 0.1), (0.025, 20.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4}, T(1, S*(1))=-0.0873. Predict F*=1? No
+  F in (0.0000, 0.4831]: Active Set = {0} (T(0.483)=-1.09e-02, T(0.000)=8.29e-02 => Contains interior F*? Yes)
+  F in (0.4831, 0.5486]: Active Set = {0, 3} (T(0.549)=-2.72e-02, T(0.483)=-1.09e-02 => Contains interior F*? No)
+  F in (0.5486, 0.7045]: Active Set = {0, 3, 4} (T(0.704)=-7.51e-02, T(0.549)=-2.72e-02 => Contains interior F*? No)
+  F in (0.7045, 0.7362]: Active Set = {0, 2, 3, 4} (T(0.736)=-8.53e-02, T(0.704)=-7.51e-02 => Contains interior F*? No)
+  F in (0.7362, 1.0000]: Active Set = {0, 1, 2, 3, 4} (T(1.000)=-8.73e-02, T(0.736)=-8.53e-02 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (4 points):
+    F=0.4831: Analytic(S={0}, E=0.0459) != CVXPY(S={0, 3}, E=0.0459) (Boundary Discrepancy)
+    F=0.5486: Analytic(S={0, 3}, E=0.0447) != CVXPY(S={0, 3, 4}, E=0.0447) (Boundary Discrepancy)
+    F=0.7045: Analytic(S={0, 3, 4}, E=0.0372) != CVXPY(S={0, 2, 3, 4}, E=0.0372) (Boundary Discrepancy)
+    F=0.7362: Analytic(S={0, 2, 3, 4}, E=0.0346) != CVXPY(S={0, 1, 2, 3, 4}, E=0.0346) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.448178
+  Optimal Fractions f*: [0.44818, 0.0, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.046071
+  Optimal Active Set S*: {0}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.448178) is within predicted interval (0.0000, 0.4831].
+
+--- End of Example 15 ---
+
+--- Running Example 16 (n=10) ---
+Parameters: [(0.1, 10.0, 0.0), (0.1, 10.0, 0.0)]...[(0.1, 10.0, 0.0)]
+
+Starting trace for params: [(0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0), (0.1, 10.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, T(1, S*(1))=0.0000. Predict F*=1? Yes
+  F in (0.0000, 1.0000]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison: All tested points OK.
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.909148
+  Optimal Fractions f*: [0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091, 0.09091]
+  Maximum E[log W]*: -0.000000
+  Optimal Active Set S*: {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.909148) falls within predicted flat region (0.0000, 1.0000] for S={0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.
+
+--- End of Example 16 ---
+
+--- Running Example 17 (n=10) ---
+Parameters: [(0.2, 3.0, 0.1), (0.1, 5.0, 0.0)]...[(0.1, 4.0, 0.0)]
+
+Starting trace for params: [(0.2, 3.0, 0.1), (0.1, 5.0, 0.0), (0.1, 6.0, 0.0), (0.1, 7.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, T(1, S*(1))=-0.5084. Predict F*=1? No
+  F in (0.0000, 0.0110]: Active Set = {6} (T(0.011)=-4.37e-02, T(0.000)=4.64e-02 => Contains interior F*? Yes)
+  F in (0.0110, 0.0494]: Active Set = {5, 6} (T(0.049)=-1.60e-01, T(0.011)=-4.37e-02 => Contains interior F*? No)
+  F in (0.0494, 0.0534]: Active Set = {8, 5, 6} (T(0.053)=-1.68e-01, T(0.049)=-1.60e-01 => Contains interior F*? No)
+  F in (0.0534, 0.0779]: Active Set = {8, 5, 6, 7} (T(0.078)=-2.08e-01, T(0.053)=-1.68e-01 => Contains interior F*? No)
+  F in (0.0779, 0.1111]: Active Set = {3, 5, 6, 7, 8} (T(0.111)=-2.43e-01, T(0.078)=-2.08e-01 => Contains interior F*? No)
+  F in (0.1111, 0.1597]: Active Set = {3, 4, 5, 6, 7, 8} (T(0.160)=-2.81e-01, T(0.111)=-2.43e-01 => Contains interior F*? No)
+  F in (0.1597, 0.2405]: Active Set = {2, 3, 4, 5, 6, 7, 8} (T(0.241)=-3.30e-01, T(0.160)=-2.81e-01 => Contains interior F*? No)
+  F in (0.2405, 0.2865]: Active Set = {0, 2, 3, 4, 5, 6, 7, 8} (T(0.287)=-3.47e-01, T(0.241)=-3.30e-01 => Contains interior F*? No)
+  F in (0.2865, 0.4508]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 8} (T(0.451)=-3.97e-01, T(0.287)=-3.47e-01 => Contains interior F*? No)
+  F in (0.4508, 1.0000]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} (T(1.000)=-5.08e-01, T(0.451)=-3.97e-01 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (9 points):
+    F=0.0110: Analytic(S={6}, E=0.0504) != CVXPY(S={5, 6}, E=0.0504) (Boundary Discrepancy)
+    F=0.0494: Analytic(S={5, 6}, E=0.0464) != CVXPY(S={8, 5, 6}, E=0.0464) (Boundary Discrepancy)
+    F=0.0534: Analytic(S={8, 5, 6}, E=0.0458) != CVXPY(S={8, 5, 6, 7}, E=0.0458) (Boundary Discrepancy)
+    F=0.0779: Analytic(S={8, 5, 6, 7}, E=0.0412) != CVXPY(S={3, 5, 6, 7, 8}, E=0.0412) (Boundary Discrepancy)
+    F=0.1111: Analytic(S={3, 5, 6, 7, 8}, E=0.0337) != CVXPY(S={3, 4, 5, 6, 7, 8}, E=0.0337) (Boundary Discrepancy)
+    ...
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.005431
+  Optimal Fractions f*: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.00543, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.050537
+  Optimal Active Set S*: {6}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.005431) is within predicted interval (0.0000, 0.0110].
+
+--- End of Example 17 ---
+
+--- Running Example 18 (n=10) ---
+Parameters: [(0.1, 5.0, 0.1), (0.1, 5.0, 0.1)]...[(0.1, 5.0, 0.1)]
+
+Starting trace for params: [(0.1, 5.0, 0.1), (0.1, 5.0, 0.1), (0.1, 5.0, 0.1), (0.1, 5.0, 0.1)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, T(1, S*(1))=-0.8333. Predict F*=1? No
+  F in (0.0000, 1.0000]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} (T(1.000)=-8.33e-01, T(0.000)=-4.55e-01 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison: All tested points OK.
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000000
+  Optimal Fractions f*: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.095310
+  Optimal Active Set S*: set()
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=0 matches CVXPY F* (~0.0).
+
+--- End of Example 18 ---
+
+--- Running Example 19 (n=10) ---
+Parameters: [(0.25, 2.0, 0.05), (0.15, 3.0, 0.0)]...[(0.1, 3.5, 0.0)]
+
+Starting trace for params: [(0.25, 2.0, 0.05), (0.15, 3.0, 0.0), (0.1, 4.0, 0.1), (0.1, 5.0, 0.0)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, T(1, S*(1))=-1.0797. Predict F*=1? No
+  F in (0.0000, 0.0041]: Active Set = {3} (T(0.004)=-4.60e-01, T(0.000)=-4.51e-01 => Contains interior F*? No)
+  F in (0.0041, 0.0142]: Active Set = {3, 5} (T(0.014)=-4.74e-01, T(0.004)=-4.60e-01 => Contains interior F*? No)
+  F in (0.0142, 0.0600]: Active Set = {0, 3, 5} (T(0.060)=-5.00e-01, T(0.014)=-4.74e-01 => Contains interior F*? No)
+  F in (0.0600, 0.1724]: Active Set = {0, 1, 3, 5, 7} (T(0.172)=-5.47e-01, T(0.060)=-5.00e-01 => Contains interior F*? No)
+  F in (0.1724, 0.2450]: Active Set = {0, 1, 3, 4, 5, 7} (T(0.245)=-5.80e-01, T(0.172)=-5.47e-01 => Contains interior F*? No)
+  F in (0.2450, 0.3249]: Active Set = {0, 1, 3, 4, 5, 6, 7} (T(0.325)=-6.21e-01, T(0.245)=-5.80e-01 => Contains interior F*? No)
+  F in (0.3249, 0.3309]: Active Set = {0, 1, 3, 4, 5, 6, 7, 9} (T(0.331)=-6.23e-01, T(0.325)=-6.21e-01 => Contains interior F*? No)
+  F in (0.3309, 0.6110]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 9} (T(0.611)=-7.60e-01, T(0.331)=-6.23e-01 => Contains interior F*? No)
+  F in (0.6110, 1.0000]: Active Set = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} (T(1.000)=-1.08e+00, T(0.611)=-7.60e-01 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (8 points):
+    F=0.0041: Analytic(S={3}, E=0.0509) != CVXPY(S={3, 5}, E=0.0509) (Boundary Discrepancy)
+    F=0.0142: Analytic(S={3, 5}, E=0.0462) != CVXPY(S={0, 3, 5}, E=0.0462) (Boundary Discrepancy)
+    F=0.0600: Analytic(S={0, 3, 5}, E=0.0239) != CVXPY(S={0, 1, 3, 5, 7}, E=0.0239) (Boundary Discrepancy)
+    F=0.1724: Analytic(S={0, 1, 3, 5, 7}, E=-0.0348) != CVXPY(S={0, 1, 3, 4, 5, 7}, E=-0.0348) (Boundary Discrepancy)
+    F=0.2450: Analytic(S={0, 1, 3, 4, 5, 7}, E=-0.0757) != CVXPY(S={0, 1, 3, 4, 5, 6, 7}, E=-0.0757) (Boundary Discrepancy)
+    ...
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.000000
+  Optimal Fractions f*: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.052775
+  Optimal Active Set S*: set()
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. Predicted F*=0 matches CVXPY F* (~0.0).
+
+--- End of Example 19 ---
+
+--- Running Example 20 (n=4) ---
+Parameters: [(0.4, 2.6, 0.1), (0.3, 3.0, 0.0), (0.2, 4.0, 0.2), (0.1, 7.0, 0.05)]
+
+Starting trace for params: [(0.4, 2.6, 0.1), (0.3, 3.0, 0.0), (0.2, 4.0, 0.2), (0.1, 7.0, 0.05)]...
+Initial state (F=1.0): Active Set S* = {0, 1, 2, 3}
+
+Iterative Algorithm Trace & Global Optimum Test:
+  Test for F*=1: S*(1)={0, 1, 2, 3}, T(1, S*(1))=-0.1011. Predict F*=1? No
+  F in (0.0000, 0.0202]: Active Set = {0} (T(0.020)=-7.55e-03, T(0.000)=1.99e-02 => Contains interior F*? Yes)
+  F in (0.0202, 0.2290]: Active Set = {0, 1} (T(0.229)=-8.73e-02, T(0.020)=-7.55e-03 => Contains interior F*? No)
+  F in (0.2290, 0.2577]: Active Set = {0, 1, 3} (T(0.258)=-9.41e-02, T(0.229)=-8.73e-02 => Contains interior F*? No)
+  F in (0.2577, 1.0000]: Active Set = {0, 1, 2, 3} (T(1.000)=-1.01e-01, T(0.258)=-9.41e-02 => Contains interior F*? No)
+
+Fixed-F Comparison Points:
+  Fixed-F Comparison Issues Encountered (5 points):
+    F=0.0202: Analytic(S={0}, E=0.0796) != CVXPY(S={0, 1}, E=0.0796) (Boundary Discrepancy)
+    F=0.2280: Analytic(S={0, 1}, E=0.0702) != CVXPY(S={0, 1, 3}, E=0.0702) (Potential Mismatch)
+    F=0.2290: Analytic(S={0, 1}, E=0.0701) != CVXPY(S={0, 1, 3}, E=0.0701) (Boundary Discrepancy)
+    F=0.2567: Analytic(S={0, 1, 3}, E=0.0676) != CVXPY(S={0, 1, 2, 3}, E=0.0676) (Potential Mismatch)
+    F=0.2577: Analytic(S={0, 1, 3}, E=0.0675) != CVXPY(S={0, 1, 2, 3}, E=0.0675) (Boundary Discrepancy)
+
+Variable-F Global Optimum (0 <= F <= 1) via CVXPY:
+  Optimal Total F*: 0.014581
+  Optimal Fractions f*: [0.01458, 0.0, 0.0, 0.0]
+  Maximum E[log W]*: 0.079612
+  Optimal Active Set S*: {0}
+
+  Final Verification (CVXPY F* vs Predicted Region):
+    OK: E[logW] matches. CVXPY F* (0.014581) is within predicted interval (0.0000, 0.0202].
+
+--- End of Example 20 ---
+
+--- Overall Summary ---
+Timestamp: 2025-05-03 22:22:17
+Total examples run: 20
+Total fixed-F comparison points tested: 334
+Fixed-F CVXPY failures: 0
+Variable-F CVXPY failures: 0
+Fixed-F mismatches counted (excluding boundary issues with matching E[logW]): 16
+Fixed-F boundary discrepancies noted (E[logW] matches): 46
+Variable-F consistency checks passed (obj match & F* consistent/explained): 20
+Variable-F consistency check mismatches (obj values differ): 0
+Total execution time: 1.07 seconds
