@@ -1,4 +1,4 @@
-# Log Utility Betting Analyzer (`bonus_analyzer.py`)
+# Log-Utility Betting Analyzer (`bonus_analyzer.py`)
 
 This script analyzes betting scenarios under the log-utility framework, considering potential fixed bonuses for specific outcomes. It performs several key tasks:
 
