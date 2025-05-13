@@ -223,7 +223,7 @@ if __name__ == '__main__':
     # and might take hours/days.
     try:
         model.learn(total_timesteps=20000) # Increased for a tiny bit more training
-        print("Training finished (or interrupted).")
+        print("\nTraining finished (or interrupted).")
 
         # Save the model (optional)
         # model.save("ppo_pooled_kelly")
